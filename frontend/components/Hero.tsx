@@ -11,7 +11,7 @@ const Hero: React.FC = () => {
 
 
   return (
-    <div className='flex flex-col sm:flex-row border border-gray-400 mt-5 sm:mt-2'>
+    <div className='flex flex-col sm:flex-row border border-gray-400 mt-5 sm:mt-1'>
 
        <div className='w-full sm:w-1/2 flex items-center justify-center py-10 sm:py-0'>
                 <div className='text-[#414141]'>
@@ -31,7 +31,7 @@ const Hero: React.FC = () => {
 
          {/**right side */}
            
-        <img src='/d1.jpg' alt='hero-img' className='w-full sm:w-1/2'/>
+         <img src='/a1.jpg' alt='hero-img' className='w-full sm:w-1/2'/>
 
        
 
