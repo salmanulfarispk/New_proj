@@ -4,6 +4,11 @@ import { usePathname } from 'next/navigation';
 import { FiSearch } from "react-icons/fi";
 import { FaRegUser } from "react-icons/fa6";
 import { IoCartOutline } from "react-icons/io5";
+import { TbMenuDeep } from "react-icons/tb";
+import { useState } from 'react';
+import { IoIosArrowBack } from "react-icons/io";
+
+
 
 
 export const Navbar = () => {
@@ -12,9 +17,11 @@ export const Navbar = () => {
 
   const isActive = (path: string) => pathname === path;
 
+  const [visible,setVisible]=useState(false)
+
   return (
     <div className='flex items-center justify-between py-5 font-medium'>
-      <img src='/logo.png' className='w-28' alt='Logo' />
+      <img src='/logo.png' className='w-24 sm:w-28' alt='Logo' />
 
       <ul className='hidden sm:flex gap-5 text-sm text-gray-700'>
         <Link href="/" className='flex flex-col items-center gap-1'>
@@ -58,14 +65,34 @@ export const Navbar = () => {
 
           <Link href='/cart' className='relative'>
              <span>
-             <IoCartOutline className='cursor-pointer text-gray-700' size={22}/>
-              <p className='absolute right-[-5px] bottom-[-2px] w-4 text-center leading-4 bg-black text-white aspect-square rounded-full text-[7px]'>10</p>
+             <IoCartOutline className='cursor-pointer text-gray-700' size={20}/>
+              <p className='absolute right-[-1px] bottom-[-1px] w-3 h-3 text-center leading-3 bg-black text-white aspect-square rounded-full text-[7px]'>10</p>
              </span>
           </Link>
 
-
-
+           <span onClick={()=> setVisible(true)}>
+                <TbMenuDeep className='cursor-pointer sm:hidden text-gray-700' size={22}/>
+           </span>
       </div>
+
+     
+          {/**sidebar for mob screen */}
+            <div className={`absolute top-0 right-0 bottom-0 overflow-hidden bg-white transition-all ${visible ? 'w-full' : 'w-0'}`}>
+                <div className='flex flex-col text-gray-600 '>
+                    <div className='flex items-center gap-4 p-3 cursor-pointer' onClick={()=> setVisible(false)}>
+                        <IoIosArrowBack className='text-gray-400' size={20}/>
+                        <p>Back</p>
+                    </div>
+
+                    <Link href='/' onClick={()=> setVisible(false)} className='py-2 pl-6 border'>HOME</Link>
+                    <Link href='/collection' onClick={()=> setVisible(false)} className='py-2 pl-6 border'>COLLECTION</Link>
+                    <Link href='/about' onClick={()=> setVisible(false)} className='py-2 pl-6 border'>ABOUT</Link>
+                    <Link href='/contact' onClick={()=> setVisible(false)} className='py-2 pl-6 border'>CONTACT</Link>
+
+                </div>
+            </div>
+
+
     </div>
   );
 };
