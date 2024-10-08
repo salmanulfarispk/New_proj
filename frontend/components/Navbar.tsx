@@ -21,7 +21,9 @@ export const Navbar = () => {
 
   return (
     <div className='flex items-center justify-between py-5 font-medium'>
+      <Link href="/">
       <img src='/logo.png' className='w-28 sm:w-36' alt='Logo' />
+      </Link>
 
       <ul className='hidden sm:flex gap-5 text-sm text-gray-700'>
         <Link href="/" className='flex flex-col items-center gap-1'>
@@ -66,7 +68,7 @@ export const Navbar = () => {
           <Link href='/cart' className='relative'>
              <span>
              <IoCartOutline className='cursor-pointer text-gray-700' size={24}/>
-              <p className='absolute right-[-1px] bottom-[-1px] w-3 h-3 text-center leading-3 bg-black text-white aspect-square rounded-full text-[7px]'>10</p>
+              <p className='absolute right-[-1px] bottom-[1px] w-3 h-3 text-center leading-3 bg-black text-white aspect-square rounded-full text-[7px]'>10</p>
              </span>
           </Link>
 
@@ -84,10 +86,10 @@ export const Navbar = () => {
                         <p>Back</p>
                     </div>
 
-                    <Link href='/' onClick={()=> setVisible(false)} className='py-2 pl-6 border'>HOME</Link>
-                    <Link href='/collection' onClick={()=> setVisible(false)} className='py-2 pl-6 border'>COLLECTION</Link>
-                    <Link href='/about' onClick={()=> setVisible(false)} className='py-2 pl-6 border'>ABOUT</Link>
-                    <Link href='/contact' onClick={()=> setVisible(false)} className='py-2 pl-6 border'>CONTACT</Link>
+                    <Link href='/' onClick={()=> setVisible(false)} className={`py-2 pl-6 border ${isActive('/') ? "bg-black text-white" : ""}`}>HOME</Link>
+                    <Link href='/collection' onClick={()=> setVisible(false)} className={`py-2 pl-6 border ${isActive('/collection') ? "bg-black text-white" : ""}`}>COLLECTION</Link>
+                    <Link href='/about' onClick={()=> setVisible(false)} className={`py-2 pl-6 border ${isActive('/about') ? "bg-black text-white" : ""}`}>ABOUT</Link>
+                    <Link href='/contact' onClick={()=> setVisible(false)} className={`py-2 pl-6 border ${isActive('/contact') ? "bg-black text-white" : ""}`}>CONTACT</Link>
 
                 </div>
             </div>
