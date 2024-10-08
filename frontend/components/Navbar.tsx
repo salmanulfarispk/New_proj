@@ -1,6 +1,6 @@
 "use client"
 import Link from 'next/link';
-import { usePathname } from 'next/navigation'; 
+import { usePathname, useRouter } from 'next/navigation'; 
 import { FiSearch } from "react-icons/fi";
 import { FaRegUser } from "react-icons/fa6";
 import { IoCartOutline } from "react-icons/io5";
@@ -18,6 +18,8 @@ export const Navbar = () => {
   const isActive = (path: string) => pathname === path;
 
   const [visible,setVisible]=useState(false)
+
+  const router=useRouter()
 
   return (
     <div className='flex items-center justify-between py-5 font-medium'>
@@ -50,7 +52,7 @@ export const Navbar = () => {
 
       <div className='flex items-center gap-6'>
          <span>
-         <FiSearch  className='cursor-pointer text-gray-700'size={24}/>
+         <FiSearch  className='cursor-pointer text-gray-700'size={24} onClick={()=> router.push("/collection")}/>
          </span>
          <div className='group relative'>
             <span>

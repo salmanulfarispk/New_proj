@@ -1,72 +1,53 @@
-"use client"
+"use client";
+
 import Title from "@/components/Title";
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useEffect} from "react";
 import { MdArrowForwardIos } from "react-icons/md";
 import { Products } from "@/utils/datas";
 import { ProductItem } from "@/components/ProductItem";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../redux/store";
+import { setAllProducts, setCategory, setSortType, setSubCategory, toggleShowFilter } from "../redux/slices/ProductSlice";
 
 
-interface products{
-    id: string;
-    bestseller: boolean;
-    category: string;
-    date: 35647345437,
-    description:string;
-    image: string;
-    name:string;
-    price: number;
-    sizes: string[];
-    SubCategory: string
-}
 
-// export async function getStaticProps() {
-//     try {
-//         const res = await fetch('YOUR_API_ENDPOINT'); // Replace with your actual API endpoint
 
-//         if (!res.ok) {
-//             throw new Error('Failed to fetch data');
-//         }
 
-//         const data = await res.json();
 
-//         return {
-//             props: { data }, // Pass data to the page component
-//             revalidate: 60,  // Optional: Revalidate the page every 60 seconds (ISR)
-//         };
-//     } catch (error) {
-//         console.error(error); // Log the error for debugging
-//         return {
-//             props: { data: [] }, // Provide a fallback if the fetch fails
-//         };
-//     }
-// }
 
 const collectionPage = () => {
 
-   const [showFilter,setShowFilter]=useState(false)
-   const [AllProducts,setAllProducts]=useState<products[] | []>([])
-    const [category,setCategory]=useState<string[]>([])
-    const [subcategory,setSubCategory]=useState<string[]>([])
+
+    const dispatch = useDispatch();
+    const showFilter = useSelector((state: RootState) => state.products.showFilter);
+    const allProducts = useSelector((state: RootState) => state.products.allProducts);
+    const category = useSelector((state: RootState) => state.products.category);
+    const subcategory = useSelector((state: RootState) => state.products.subcategory);
+    const sortType = useSelector((state: RootState) => state.products.sortType);
 
    
-
-    const toggleCategory =(e: FormEvent<HTMLInputElement>)=>{
-        const value=(e.target as HTMLInputElement).value;
-      if(category.includes(value)){
-         setCategory(prev => prev.filter(item => item !== value))
-      }else{
-        setCategory(prev=> [...prev,value])
-      }
+   
+    const toggleCategory = (e: FormEvent<HTMLInputElement>) => {
+        const value = (e.target as HTMLInputElement).value;
+    
+        const newCategories = category.includes(value)
+            ? category.filter(item => item !== value)
+            : [...category, value];
+    
+        dispatch(setCategory(newCategories));
     };
-
-    const toggleSubCategory=(e: FormEvent<HTMLInputElement>)=>{
-        const value=(e.target as HTMLInputElement).value;
-        if(subcategory.includes(value)){
-           setSubCategory(prev => prev.filter(item => item !== value))
-        }else{
-            setSubCategory(prev=> [...prev,value])
-        }
+    
+    const toggleSubCategory = (e: FormEvent<HTMLInputElement>) => {
+        const value = (e.target as HTMLInputElement).value;
+    
+        const newSubCategories = subcategory.includes(value)
+            ? subcategory.filter(item => item !== value)
+            : [...subcategory, value];
+    
+        dispatch(setSubCategory(newSubCategories));
     };
+    
+   
 
     const applyFilter=()=>{
         let productsCopy= Products.slice(); //creates a copy
@@ -79,7 +60,26 @@ const collectionPage = () => {
 
         }
 
-        setAllProducts(productsCopy as products[])
+        dispatch(setAllProducts(productsCopy))
+    };
+
+    
+    const sortProduct =()=>{
+
+        let fpcopy= allProducts.slice();
+
+        switch(sortType){
+            case "low-high":
+                dispatch(setAllProducts(fpcopy.sort((a,b)=> (a.price - b.price))))
+                break;
+            case "high-low":
+                dispatch(setAllProducts(fpcopy.sort((a,b)=> b.price - a.price)))
+                break;
+
+            default:
+             applyFilter();
+             break;
+        }
     }
 
 
@@ -87,6 +87,10 @@ const collectionPage = () => {
     applyFilter()
    },[category,subcategory])
 
+     
+   useEffect(()=>{
+      sortProduct();
+   },[sortType])
 
     return (
         <div className="flex flex-col sm:flex-row gap-1 sm:gap-10 pt-10 border-t">
@@ -94,7 +98,7 @@ const collectionPage = () => {
            {/**filter options */}
             <div className="min-w-60">
                 <p className="my-2 text-xl flex items-center cursor-pointer gap-2"
-                 onClick={()=> setShowFilter(!showFilter)}>
+                 onClick={()=> dispatch(toggleShowFilter())}>
                     FILTERS <MdArrowForwardIos size={16} className={`text-gray-300 sm:hidden ${showFilter ? "rotate-90" : ""}`}/>
                 </p>
 
@@ -141,7 +145,7 @@ const collectionPage = () => {
                     <Title text1={'ALL'} text2={"COLLECTIONS"}/>
 
                     {/**Sort by price */}
-                    <select className="border-2 border-gray-300 text-sm px-2">
+                    <select className="border-2 border-gray-300 text-sm px-2" onChange={(e)=> dispatch(setSortType(e.target.value))}>
                         <option value="relavent">Sort by: Relavent</option>
                         <option value="low-high">Sort by: Low to High</option>
                         <option value="high-low">Sort by: High to Low</option>
@@ -153,7 +157,7 @@ const collectionPage = () => {
 
                   <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 gap-y-6">
                      {
-                        AllProducts.map((item,index)=> (
+                        allProducts.map((item,index)=> (
                             <ProductItem id={item.id} name={item.name} image={item.image} price={item.price} key={index}/>
                         ))
                      }
