@@ -27,14 +27,14 @@ export const Products =[
         name:"Women Zip-Front Relaxed Fit Jacket",
         price: 450,
         sizes: ["S","M","L","XL","XXL"],
-        SubCategory: "Topwear",
+        SubCategory: "Winterwear",
 
 
     },
     {
         id:"aaab",
         bestseller: true,
-        category:"women",
+        category:"Kids",
         date: 35647345437,
         description:"A lightweight, usually knitted, pullover shirt, close-fitting and with a round neckline and short sleeves, worn as an undershirt or outer garment.",
         image:"/pr1.png",
@@ -55,7 +55,7 @@ export const Products =[
         name:"Women Zip-Front Relaxed Fit Jacket",
         price: 350,
         sizes: ["S","M","L","XL","XXL"],
-        SubCategory: "Topwear",
+        SubCategory: "Winterwear",
 
 
     },
@@ -69,14 +69,14 @@ export const Products =[
         name:"Women Zip-Front Relaxed Fit Jacket",
         price: 350,
         sizes: ["S","M","L","XL","XXL"],
-        SubCategory: "Topwear",
+        SubCategory: "Winterwear",
 
 
     },
     {
         id:"aaab",
         bestseller: true,
-        category:"women",
+        category:"Women",
         date: 35647345437,
         description:"A lightweight, usually knitted, pullover shirt, close-fitting and with a round neckline and short sleeves, worn as an undershirt or outer garment.",
         image:"/pr1.png",
@@ -90,7 +90,7 @@ export const Products =[
     {
         id:"aaab",
         bestseller: true,
-        category:"women",
+        category:"Men",
         date: 35647345437,
         description:"A lightweight, usually knitted, pullover shirt, close-fitting and with a round neckline and short sleeves, worn as an undershirt or outer garment.",
         image:"/pr1.png",
@@ -104,7 +104,7 @@ export const Products =[
     {
         id:"aaab",
         bestseller: true,
-        category:"women",
+        category:"Men",
         date: 35647345437,
         description:"A lightweight, usually knitted, pullover shirt, close-fitting and with a round neckline and short sleeves, worn as an undershirt or outer garment.",
         image:"/pr1.png",
@@ -118,28 +118,28 @@ export const Products =[
     {
         id:"aaab",
         bestseller: true,
-        category:"women",
+        category:"Kids",
         date: 35647345437,
         description:"A lightweight, usually knitted, pullover shirt, close-fitting and with a round neckline and short sleeves, worn as an undershirt or outer garment.",
         image:"/pr1.png",
         name:"Women Zip-Front Relaxed Fit Jacket",
         price: 350,
         sizes: ["S","M","L","XL","XXL"],
-        SubCategory: "Topwear",
+        SubCategory: "Bottomwear",
 
 
     },
     {
         id:"aaab",
         bestseller: true,
-        category:"women",
+        category:"Women",
         date: 35647345437,
         description:"A lightweight, usually knitted, pullover shirt, close-fitting and with a round neckline and short sleeves, worn as an undershirt or outer garment.",
         image:"/pr1.png",
         name:"Women Zip-Front Relaxed Fit Jacket",
         price: 350,
         sizes: ["S","M","L","XL","XXL"],
-        SubCategory: "Topwear",
+        SubCategory: "Bottomwear",
 
 
     },

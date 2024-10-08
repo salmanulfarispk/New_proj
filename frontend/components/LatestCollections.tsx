@@ -6,7 +6,7 @@ import { ProductItem } from './ProductItem'
 
 const LatestCollections = () => {
 
-    
+    const latestproduct = Products.slice(0, 10);
     
 
   return (
@@ -20,7 +20,7 @@ const LatestCollections = () => {
 
          <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 gap-y-6'>
             {
-                Products.map((item,index)=> (
+                latestproduct.map((item,index)=> (
                     <ProductItem id={item.id} image={item.image} name={item.name} price={item.price} key={index}/>
                 ))
             }
