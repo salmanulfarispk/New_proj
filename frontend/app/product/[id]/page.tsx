@@ -1,4 +1,5 @@
 "use client"
+import { DescriptionReview } from "@/components/DescriptionReview";
 import { RootState } from "@/store/store";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -24,6 +25,7 @@ const ProductPage = ({ params }: { params: { id: string } }) => {
      const [productData,setProductData]=useState<Product | null>(null)
      const [image,setImage]=useState('')
      const [selectedImage, setSelectedImage] = useState(""); 
+     const [size,SetSize]=useState('')
       
       const fetchProductData= async()=>{
          
@@ -57,8 +59,8 @@ const ProductPage = ({ params }: { params: { id: string } }) => {
             <div className="flex-1 flex flex-col-reverse gap-3 sm:flex-row">
                 <div className="flex sm:flex-col overflow-y-scroll justify-between sm:justify-normal sm:w-[18.7%] w-full">
                     {
-                        productData && productData.image.map((item:any,index:number)=>(
-                           <img src={item}  key={index} className="w-[24%] sm:w-full sm:mb-3 flex-shrink-0 cursor-pointer"
+                        productData && productData.image.map((item,index)=>(
+                           <img src={item}  key={index} className={`w-[24%] sm:w-full sm:mb-3 flex-shrink-0 cursor-pointer ${ item === selectedImage ? "border-2 border-slate-200 transition-all ease-in duration-200" : ""}`}
                            onMouseEnter={() => setImage(item)} 
                            onMouseLeave={() => setImage(selectedImage)}
                            onClick={() => setSelectedImage(item)}
@@ -88,10 +90,41 @@ const ProductPage = ({ params }: { params: { id: string } }) => {
                     <p className="mt-5 text-3xl font-medium">
                         ₹{productData?.price}
                     </p>
+                    <p className="mt-5 text-gray-500 md:w-4/5">
+                        {productData?.description}
+                    </p>
+                    <div className="flex flex-col gap-4 my-8">
+                        <p className="">Select Size</p>
+                         <div className="flex gap-2">
+                           {productData?.sizes.map((item,index)=>(
+                            <button key={index} className={`border py-2 px-4 bg-gray-100 ${item === size ? "border-2 border-orange-500" : ""}`}
+                             onClick={()=> SetSize(item)}
+                            >
+                                {item}
+                            </button>
+                           ))}
+                         </div>
+                    </div>
+
+                    <button className="bg-black text-white px-8 py-3 text-sm  active:bg-gray-700">
+                        ADD TO CART
+                    </button>
+                   
+                   <hr className="mt-8 sm:w-4/5 "/>
+                   <div className="text-sm text-gray-500 mt-5 flex flex-col gap-1">
+                           <p>100% Original product.</p>
+                           <p>Cash on delivery is available on this product.</p>
+                           <p>Easy return and exchange policy within 7 days.</p>
+                   </div>
                 </div>
-
-
         </div>
+
+
+
+             {/**description and review*/}
+            <DescriptionReview />
+
+
       </div>
     );
   };
