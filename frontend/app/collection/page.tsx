@@ -6,8 +6,8 @@ import { MdArrowForwardIos } from "react-icons/md";
 import { Products } from "@/utils/datas";
 import { ProductItem } from "@/components/ProductItem";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../redux/store";
-import { setAllProducts, setCategory, setSortType, setSubCategory, toggleShowFilter } from "../redux/slices/ProductSlice";
+import { RootState } from "@/store/store";
+import { setAllProducts, setCategory, setSortType, setSubCategory, toggleShowFilter } from "@/features/ProductSlice";
 
 
 
@@ -24,6 +24,10 @@ const collectionPage = () => {
     const category = useSelector((state: RootState) => state.products.category);
     const subcategory = useSelector((state: RootState) => state.products.subcategory);
     const sortType = useSelector((state: RootState) => state.products.sortType);
+    const search = useSelector((state: RootState) => state.products.search);
+    const showSearch = useSelector((state: RootState) => state.products.showSearch);
+
+
 
    
    
@@ -51,6 +55,10 @@ const collectionPage = () => {
 
     const applyFilter=()=>{
         let productsCopy= Products.slice(); //creates a copy
+
+        if (showSearch && search){
+            productsCopy= productsCopy.filter(item => item.name.toLowerCase().includes(search.toLowerCase()))   
+        }
         if(category.length > 0){
             productsCopy= productsCopy.filter(item => category.includes(item.category))
         }
@@ -85,7 +93,7 @@ const collectionPage = () => {
 
    useEffect(()=>{
     applyFilter()
-   },[category,subcategory])
+   },[category,subcategory,search,showSearch])
 
      
    useEffect(()=>{
@@ -158,7 +166,7 @@ const collectionPage = () => {
                   <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 gap-y-6">
                      {
                         allProducts.map((item,index)=> (
-                            <ProductItem id={item.id} name={item.name} image={item.image} price={item.price} key={index}/>
+                            <ProductItem id={item.id} name={item.name} image={item.image[0]} price={item.price} key={index}/>
                         ))
                      }
                   </div>

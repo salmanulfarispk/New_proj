@@ -2,8 +2,9 @@ import { Outfit, Prata } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import ClientProvider from "./provider/ClientProvider"; 
+import ClientProvider from "@/provider/ClientProvider" 
 import type { Metadata } from "next";
+import { Searchbar } from "@/components/Searchbar";
 
 
 
@@ -40,6 +41,7 @@ export default function RootLayout({
         <div className="px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw]">
         <ClientProvider>
           <Navbar />
+          <Searchbar />
            {children}
            <Footer />
         </ClientProvider>

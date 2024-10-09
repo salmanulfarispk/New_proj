@@ -7,6 +7,8 @@ import { IoCartOutline } from "react-icons/io5";
 import { HiOutlineMenuAlt3 } from "react-icons/hi";
 import { useState } from 'react';
 import { IoIosArrowBack } from "react-icons/io";
+import { useDispatch } from 'react-redux';
+import { setShowSearch } from '@/features/ProductSlice';
 
 
 
@@ -18,6 +20,8 @@ export const Navbar = () => {
   const isActive = (path: string) => pathname === path;
 
   const [visible,setVisible]=useState(false)
+  
+  const dispatch=useDispatch()
 
   const router=useRouter()
 
@@ -52,7 +56,11 @@ export const Navbar = () => {
 
       <div className='flex items-center gap-6'>
          <span>
-         <FiSearch  className='cursor-pointer text-gray-700'size={24} onClick={()=> router.push("/collection")}/>
+         <FiSearch  className='cursor-pointer text-gray-700'size={24} 
+            onClick={()=> { 
+              router.push("/collection")
+              dispatch(setShowSearch(true))
+              }}/>
          </span>
          <div className='group relative'>
             <span>

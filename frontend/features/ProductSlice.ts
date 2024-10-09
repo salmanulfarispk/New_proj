@@ -2,12 +2,28 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Products } from '@/utils/datas';  
 
 
+type Product = {
+  id: string;
+  bestseller: boolean;
+  category: string;
+  date: number;
+  description: string;
+  image: string[];
+  name: string;
+  price: number;
+  sizes: string[];
+  SubCategory: string;
+};
+
+
 interface ProductState {
-  allProducts: typeof Products; 
+  allProducts: Product[]; 
   showFilter: boolean;
   category: string[];
   subcategory: string[];
   sortType: string;
+  search: string;
+  showSearch: boolean;
 }
 
 const initialState: ProductState = {
@@ -16,13 +32,15 @@ const initialState: ProductState = {
   category: [],
   subcategory: [],
   sortType: 'relavent', 
+  search: '',
+  showSearch: false
 };
 
 const productSlice = createSlice({
   name: 'products',
   initialState,
   reducers: {
-    setAllProducts(state, action: PayloadAction<typeof Products>) {
+    setAllProducts(state, action: PayloadAction<Product[]>) {
       state.allProducts = action.payload;
     },
     toggleShowFilter(state) {
@@ -37,6 +55,12 @@ const productSlice = createSlice({
     setSortType(state, action: PayloadAction<string>) {
       state.sortType = action.payload;
     },
+    setSearch(state, action: PayloadAction<string>){
+      state.search = action.payload;
+    },
+    setShowSearch(state, action:PayloadAction<boolean>){
+      state.showSearch = action.payload
+    }
   },
 });
 
@@ -46,6 +70,8 @@ export const {
   setCategory,
   setSubCategory,
   setSortType,
+  setSearch,
+  setShowSearch
 } = productSlice.actions;
 
 export default productSlice.reducer;

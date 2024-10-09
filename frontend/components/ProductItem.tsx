@@ -1,4 +1,6 @@
+"use client"
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import React from 'react'
 
 type productItem={
@@ -11,8 +13,11 @@ type productItem={
 export const ProductItem = ({id,image,name,price}:productItem) => {
     const currency="$";
 
+    const pathname=usePathname();
+
+  
   return (
-    <Link href={`/product/${id}`} className='text-gray-700 cursor-pointer'>
+    <Link href={pathname === "/" ? `/product/${id}`: `/collection/${id}`} className='text-gray-700 cursor-pointer'>
       <div className='overflow-hidden'>
         <img src={image} alt='' className='hover:scale-110 transition ease-in-out'/>
       </div>
