@@ -10,14 +10,14 @@ type productItem={
     price: number
 }
 
-export const ProductItem = ({id,image,name,price}:productItem) => {
+export const CollectionItem = ({id,image,name,price}:productItem) => {
     const currency="₹";
 
     const pathname=usePathname();
 
   
   return (
-    <Link href={`/product/${id}`} className='text-gray-700 cursor-pointer'>
+    <Link href={`/collection/${id}`} className='text-gray-700 cursor-pointer'>
       <div className='overflow-hidden'>
         <img src={image} alt='' className='hover:scale-110 transition ease-in-out'/>
       </div>

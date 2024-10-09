@@ -4,10 +4,10 @@ import Title from "@/components/Title";
 import { FormEvent, useEffect} from "react";
 import { MdArrowForwardIos } from "react-icons/md";
 import { Products } from "@/utils/datas";
-import { ProductItem } from "@/components/ProductItem";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { setAllProducts, setCategory, setSortType, setSubCategory, toggleShowFilter } from "@/features/ProductSlice";
+import { CollectionItem } from "@/components/CollectionItem";
 
 
 
@@ -166,7 +166,7 @@ const collectionPage = () => {
                   <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 gap-y-6">
                      {
                         allProducts.map((item,index)=> (
-                            <ProductItem id={item.id} name={item.name} image={item.image[0]} price={item.price} key={index}/>
+                            <CollectionItem id={item.id} name={item.name} image={item.image[0]} price={item.price} key={index}/>
                         ))
                      }
                   </div>

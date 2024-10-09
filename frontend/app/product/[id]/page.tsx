@@ -1,5 +1,6 @@
 "use client"
 import { DescriptionReview } from "@/components/DescriptionReview";
+import { RelatedProducts } from "@/components/RelatedProducts";
 import { RootState } from "@/store/store";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -121,9 +122,12 @@ const ProductPage = ({ params }: { params: { id: string } }) => {
 
 
 
-             {/**description and review*/}
+             {/**----description and review-----*/}
             <DescriptionReview />
+             
+             {/**----Related products -----*/}
 
+             <RelatedProducts category={productData?.category} subCategory={productData?.SubCategory}/>
 
       </div>
     );
