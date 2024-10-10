@@ -77,7 +77,7 @@ export const Navbar = () => {
             <span>
            <FaRegUser className='cursor-pointer text-gray-700' size={20}/>
             </span>
-            <div className='group-hover:block hidden absolute dropdown-menu right-0 pt-4 z-50 shadow-2xl opacity-95'>
+            <div className='group-hover:block hidden absolute dropdown-menu right-0 pt-4 z-50 shadow-sm opacity-95'>
                 <div className='flex flex-col py-1 w-fit px-1 bg-white text-gray-500 rounded'>
                       <p className='cursor-pointer text-sm text-black hover:bg-gray-400 hover:text-white px-2 rounded-sm'>Profile</p>
                       <p className='cursor-pointer text-sm text-black hover:bg-gray-400 hover:text-white px-2 rounded-sm'>Orders</p>

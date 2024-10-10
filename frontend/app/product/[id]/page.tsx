@@ -5,8 +5,8 @@ import { addToCart } from "@/features/CartSlice";
 import { AppDispatch, RootState } from "@/store/store";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { RiBookmarkFill } from "react-icons/ri";
 import { BsFillBookmarkCheckFill } from "react-icons/bs";
+import { BsFillBookmarkFill } from "react-icons/bs";
 
 
 type Product = {
@@ -81,7 +81,7 @@ const ProductPage = ({ params }: { params: { id: string } }) => {
                       {changeWish ? (
                         <BsFillBookmarkCheckFill size={30}/>
                       ):(
-                       <RiBookmarkFill size={30}/>
+                       <BsFillBookmarkFill size={30}/>
                       )}
                     </span>
                   </div>
