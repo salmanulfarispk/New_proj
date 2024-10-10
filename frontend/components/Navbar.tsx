@@ -10,7 +10,7 @@ import { IoIosArrowBack } from "react-icons/io";
 import { useDispatch, useSelector } from 'react-redux';
 import { setShowSearch } from '@/features/ProductSlice';
 import { getCartCount } from '@/features/CartSlice';
-
+import { PiBookmarksBold } from "react-icons/pi";
 
 
 
@@ -65,15 +65,23 @@ export const Navbar = () => {
               dispatch(setShowSearch(true))
               }}/>
          </span>
+
+         <span>
+         <PiBookmarksBold  className='cursor-pointer text-gray-700'size={23} 
+            onClick={()=> { 
+              router.push("/wishlist")
+              dispatch(setShowSearch(true))
+              }}/>
+         </span>
          <div className='group relative'>
             <span>
-           <FaRegUser className='cursor-pointer text-gray-700' size={22}/>
+           <FaRegUser className='cursor-pointer text-gray-700' size={20}/>
             </span>
-            <div className='group-hover:block hidden absolute dropdown-menu right-0 pt-4'>
-                <div className='flex flex-col gap-2 w-36 py-3 px-5 bg-slate-100 text-gray-500 rounded'>
-                      <p className='cursor-pointer hover:text-black'>My Profile</p>
-                      <p className='cursor-pointer hover:text-black'>Orders</p>
-                      <p className='cursor-pointer hover:text-black'>Logout</p>
+            <div className='group-hover:block hidden absolute dropdown-menu right-0 pt-4 z-50 shadow-2xl opacity-95'>
+                <div className='flex flex-col py-1 w-fit px-1 bg-white text-gray-500 rounded'>
+                      <p className='cursor-pointer text-sm text-black hover:bg-gray-400 hover:text-white px-2 rounded-sm'>Profile</p>
+                      <p className='cursor-pointer text-sm text-black hover:bg-gray-400 hover:text-white px-2 rounded-sm'>Orders</p>
+                      <p className='cursor-pointer text-sm text-black hover:bg-gray-400 hover:text-white px-2 rounded-sm'>Logout</p>
                 </div>
             </div>
          </div>

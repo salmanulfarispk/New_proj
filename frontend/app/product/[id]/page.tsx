@@ -5,7 +5,8 @@ import { addToCart } from "@/features/CartSlice";
 import { AppDispatch, RootState } from "@/store/store";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-
+import { RiBookmarkFill } from "react-icons/ri";
+import { BsFillBookmarkCheckFill } from "react-icons/bs";
 
 
 type Product = {
@@ -30,6 +31,7 @@ const ProductPage = ({ params }: { params: { id: string } }) => {
      const [image,setImage]=useState('')
      const [selectedImage, setSelectedImage] = useState(""); 
      const [size,SetSize]=useState('')
+     const [changeWish,setchangeWish]=useState(false)
       
       const fetchProductData= async()=>{
          
@@ -56,11 +58,7 @@ const ProductPage = ({ params }: { params: { id: string } }) => {
       }, [selectedImage]);
      
 
-     useEffect(()=>{
-       console.log(cartitems);
-
-     },[cartitems])
-
+      
     return (
       <div className="border-t-2 pt-10 transition-opacity ease-in duration-500 opacity-100">
         <div className="flex gap-12 sm:gap-12 flex-col sm:flex-row">
@@ -77,8 +75,15 @@ const ProductPage = ({ params }: { params: { id: string } }) => {
                         ))
                     }
                 </div>
-                  <div className="w-full sm:w-[80%]">
+                  <div className="w-full sm:w-[80%] relative">
                     <img src={image}  className="w-full h-auto"/>
+                    <span className="absolute top-0 -right-1" onClick={()=> setchangeWish(true)}>
+                      {changeWish ? (
+                        <BsFillBookmarkCheckFill size={30}/>
+                      ):(
+                       <RiBookmarkFill size={30}/>
+                      )}
+                    </span>
                   </div>
             </div>
 
