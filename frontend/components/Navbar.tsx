@@ -7,8 +7,9 @@ import { IoCartOutline } from "react-icons/io5";
 import { HiOutlineMenuAlt3 } from "react-icons/hi";
 import { useState } from 'react';
 import { IoIosArrowBack } from "react-icons/io";
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setShowSearch } from '@/features/ProductSlice';
+import { getCartCount } from '@/features/CartSlice';
 
 
 
@@ -16,7 +17,6 @@ import { setShowSearch } from '@/features/ProductSlice';
 export const Navbar = () => {
 
   const pathname = usePathname();
-
   const isActive = (path: string) => pathname === path;
 
   const [visible,setVisible]=useState(false)
@@ -24,6 +24,9 @@ export const Navbar = () => {
   const dispatch=useDispatch()
 
   const router=useRouter()
+
+  const cartCount = useSelector(getCartCount); 
+ 
 
   return (
     <div className='flex items-center justify-between py-5 font-medium'>
@@ -78,7 +81,7 @@ export const Navbar = () => {
           <Link href='/cart' className='relative'>
              <span>
              <IoCartOutline className='cursor-pointer text-gray-700' size={24}/>
-              <p className='absolute right-[-1px] bottom-[1px] w-3 h-3 text-center leading-3 bg-black text-white aspect-square rounded-full text-[7px]'>10</p>
+              <p className='absolute right-[-1px] bottom-[1px] w-3 h-3 text-center leading-3 bg-black text-white aspect-square rounded-full text-[7px]'>{cartCount}</p>
              </span>
           </Link>
 

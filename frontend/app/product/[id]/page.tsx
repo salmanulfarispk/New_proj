@@ -1,9 +1,10 @@
 "use client"
 import { DescriptionReview } from "@/components/DescriptionReview";
 import { RelatedProducts } from "@/components/RelatedProducts";
-import { RootState } from "@/store/store";
+import { addToCart } from "@/features/CartSlice";
+import { AppDispatch, RootState } from "@/store/store";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 
 
@@ -22,7 +23,9 @@ type Product = {
 
 const ProductPage = ({ params }: { params: { id: string } }) => {
 
+    const dispatch=useDispatch<AppDispatch>()
     const allproducts=useSelector((state:RootState) => state.products.allProducts)
+    const cartitems=useSelector((state:RootState) => state.cart.cartItems)
      const [productData,setProductData]=useState<Product | null>(null)
      const [image,setImage]=useState('')
      const [selectedImage, setSelectedImage] = useState(""); 
@@ -52,6 +55,11 @@ const ProductPage = ({ params }: { params: { id: string } }) => {
         }
       }, [selectedImage]);
      
+
+     useEffect(()=>{
+       console.log(cartitems);
+
+     },[cartitems])
 
     return (
       <div className="border-t-2 pt-10 transition-opacity ease-in duration-500 opacity-100">
@@ -107,7 +115,13 @@ const ProductPage = ({ params }: { params: { id: string } }) => {
                          </div>
                     </div>
 
-                    <button className="bg-black text-white px-8 py-3 text-sm  active:bg-gray-700">
+                    <button className="bg-black text-white px-8 py-3 text-sm  active:bg-gray-700"
+                     onClick={()=> {
+                        if(productData){
+                            dispatch(addToCart(productData.id, size));
+                        }
+                     }}
+                    >
                         ADD TO CART
                     </button>
                    
