@@ -29,7 +29,7 @@ export const Navbar = () => {
  
 
   return (
-    <div className='flex items-center justify-between py-5 font-medium'>
+    <div className='flex items-center justify-between py-6 font-medium'>
       <Link href="/">
       <img src='/logo.png' className='w-28 sm:w-36' alt='Logo' />
       </Link>

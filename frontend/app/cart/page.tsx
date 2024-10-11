@@ -43,7 +43,7 @@ import { useRouter } from 'next/navigation'
          <Title text1={'YOUR'} text2={'CART'}/>
        </div>
 
-       <div>
+       <div className='max-h-[65vh] sm:max-h-[100vh] overflow-y-auto'>
           {
             cartdata.map((item:any,index)=>{
                 const productData = products.find((product)=> product.id === item.id);
