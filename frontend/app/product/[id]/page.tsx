@@ -26,7 +26,6 @@ const ProductPage = ({ params }: { params: { id: string } }) => {
 
     const dispatch=useDispatch<AppDispatch>()
     const allproducts=useSelector((state:RootState) => state.products.allProducts)
-    const cartitems=useSelector((state:RootState) => state.cart.cartItems)
      const [productData,setProductData]=useState<Product | null>(null)
      const [image,setImage]=useState('')
      const [selectedImage, setSelectedImage] = useState(""); 

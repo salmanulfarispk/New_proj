@@ -1,3 +1,4 @@
+import { Products } from "@/utils/datas";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
 import { Dispatch } from "redux"; 
@@ -6,6 +7,7 @@ interface CartState {
   cartItems: {
     [itemId: string]: {
       [size: string]: number;
+      [quantity: number]:number;
     };
   };
 }
@@ -70,6 +72,32 @@ export const getCartCount = (state: { cart: CartState }) => {
   
     return totalCount;
   };
+
+  export const getCartAmount = (state: { cart: CartState }) => {
+    let totalAmount = 0;
+    const cartItems = state.cart.cartItems;
+  
+    for (const itemId in cartItems) {
+      const itemInfo = Products.find((product) => product.id === itemId);
+      if (itemInfo) {
+        for (const quantity in cartItems[itemId]) {
+          try {
+            if (cartItems[itemId][quantity] > 0) {
+              totalAmount += itemInfo.price * cartItems[itemId][quantity]; 
+            }
+          } catch (error) {
+            console.error(error);
+          }
+        }
+      }
+    }
+  
+    return totalAmount;
+  };
+  
+
+
+
 
 
 export default CartSlice.reducer;

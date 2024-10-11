@@ -4,16 +4,19 @@ import { RootState } from '@/store/store'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { RiDeleteBin6Line } from "react-icons/ri";
+import { CartTotal } from '@/components/CartTotal'
+import { useRouter } from 'next/navigation'
 
 
  const Cartpage = () => {
 
-    const dispatch=useDispatch()
+    
     const products=useSelector((state:RootState) => state.products.allProducts)
     const Cartitems=useSelector((state:RootState) => state.cart.cartItems)
     var currency="₹";
     
     const [cartdata,setCartData]=useState([])
+    const router=useRouter()
 
 
     useEffect(()=>{
@@ -69,6 +72,19 @@ import { RiDeleteBin6Line } from "react-icons/ri";
             })
           }
        </div>
+
+       <div className='flex justify-end my-20 '>
+        <div className='w-full sm:w-[450px]'>
+         <CartTotal/>
+         <div className='w-full text-end'>
+            <button className='bg-black text-white text-sm my-8 px-8 py-3' onClick={()=>  router.push("/cart/place-order")}>
+                PROCEED TO CHECKOUT
+            </button>
+         </div>
+        </div>          
+       </div>
+
+
 
     </div>
   )
