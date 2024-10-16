@@ -13,7 +13,7 @@ const config: Config = {
         foreground: "var(--foreground)",
       },
       fontFamily: {
-        prata: ['Prata', 'serif'],
+        prata: ['Prata','serif'],
       },
     },
   },
