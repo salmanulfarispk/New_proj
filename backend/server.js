@@ -6,6 +6,7 @@ import connectCloudinary from "./config/cloudinary.js";
 import userRouter from "./routes/userRoute.js";
 import adminRouter from "./routes/adminRoute.js"
 import cookieParser from "cookie-parser";
+import productRouter from "./routes/productRoute.js";
 
 
 
@@ -23,6 +24,7 @@ app.use(cookieParser());
 //endpoints
 app.use("/api/user",userRouter)
 app.use("/api/admin",adminRouter)
+app.use("/api/product",productRouter)
 
 
 
