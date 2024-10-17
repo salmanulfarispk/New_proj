@@ -13,6 +13,37 @@ import { setTokensInCookies } from "../utils/generateTokens.js";
 
 
 const loginUser = async(req,res) => {
+    try {
+        
+        const {email,password}=req.body;
+        const user= await userModel.findOne({email})
+        if(!user){
+            return res.json({
+                success:false,
+                message:"user doesn't exists..."
+            })
+        };
+
+        const isMatchPass= await bcrypt.compare(password,user.password)
+       
+        if(isMatchPass){
+            await setTokensInCookies(res,user._id);
+            res.json({
+                success:true,
+                message:"user login succesfully"
+            })
+        }else{
+            res.json({
+                success: false,
+                message:"invalid credentials...."
+            })
+        }
+
+        
+    } catch (error) {
+        console.log(error);
+        res.json({success:false,message:error.message})
+    }
    
 }
 
@@ -58,8 +89,7 @@ const registerUser = async(req,res) => {
 
           res.json({
             success:true,
-            message:"user registration success..",
-            data:user
+            message:"user registration successfully.."
           })
 
         

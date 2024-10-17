@@ -8,6 +8,7 @@ import adminRouter from "./routes/adminRoute.js"
 import cookieParser from "cookie-parser";
 
 
+
 const app = express()
 const port= process.env.PORT || 4001
 
@@ -22,6 +23,7 @@ app.use(cookieParser());
 //endpoints
 app.use("/api/user",userRouter)
 app.use("/api/admin",adminRouter)
+
 
 
 
