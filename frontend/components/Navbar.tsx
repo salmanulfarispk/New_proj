@@ -17,6 +17,7 @@ import { PiBookmarksBold } from "react-icons/pi";
 export const Navbar = () => {
 
   const pathname = usePathname();
+  
   const isActive = (path: string) => pathname === path;
 
   const [visible,setVisible]=useState(false)

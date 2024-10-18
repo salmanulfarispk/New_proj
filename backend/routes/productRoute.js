@@ -5,7 +5,7 @@ const productRouter=express.Router()
 
 
 productRouter.get("/list-product",listProduct)
-productRouter.post("/single-product",listProduct)
+productRouter.post("/single-product",singleProduct)
 
 
 

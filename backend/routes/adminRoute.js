@@ -1,15 +1,16 @@
 import express from "express"
 import { adminlogin,addProduct,removeProduct } from "../controllers/adminController.js"
 import upload from "../middleware/multer.js"
+import adminAuth from "../middleware/adminAuth.js"
 
 const adminRouter=express.Router()
 
 
 adminRouter.post("/login",adminlogin)
-adminRouter.post("/add-product",upload.fields([{name:'image1',maxCount:1},{name:'image2',maxCount:1},
+adminRouter.post("/add-product",adminAuth,upload.fields([{name:'image1',maxCount:1},{name:'image2',maxCount:1},
                                         {name:'image3',maxCount:1},{name:'image4',maxCount:1}]),addProduct)
                                         
-adminRouter.post("/remove-product",removeProduct)
+adminRouter.post("/remove-product",adminAuth,removeProduct)
 
 
 

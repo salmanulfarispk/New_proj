@@ -7,11 +7,6 @@ import { setTokensInCookies } from "../utils/generateTokens.js";
 
 
 
-
-
-
-
-
 const loginUser = async(req,res) => {
     try {
         
