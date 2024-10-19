@@ -70,7 +70,7 @@ const List = ({token}) => {
 
   return (
     <>
-     <p className='mb-2'>All Products List</p>
+     <p className='mb-2 font-semibold'>All Products List</p>
      {/**----in desktop view----- */}
      <div className='hidden md:flex flex-col gap-2'>
 
@@ -85,7 +85,7 @@ const List = ({token}) => {
        {
         AllProducts && AllProducts.map((item,index)=>(
            <div key={index} className='grid grid-cols-[1fr_3fr_1fr_1fr_1fr] items-center gap-2 py-1 px-2 border text-sm'>
-              <img src={item.image[0]} alt='product-image' className='w-20'/>
+              <img src={item.image[0]} alt='product-image' className='w-20 h-16'/>
               <p>{item.name}</p>
               <p>{item.category}</p>
               <p>₹{item.price}</p>
@@ -96,6 +96,33 @@ const List = ({token}) => {
         ))
        }
 
+     </div>
+
+
+     {/**mobile view */}
+     <div className='flex flex-col gap-y-5 md:hidden'>
+        
+          {AllProducts && AllProducts.map((item,index)=>(
+            <div key={index}className='grid grid-cols-[2fr_2fr] border rounded-md'>
+              <div>
+              <img src={item.image[0]} alt='product-img'className='w-full h-full'/>
+              </div>
+             
+              <div className='flex flex-col items-center justify-center px-2'>
+                <p className='text-sm py-2 px-2 font-medium tracking-tight'>{item.name}</p>
+                <p className='mt-2 mb-1 px-2 bg-purple-100 rounded-full border text-purple-800 text-center'>{item.category}</p>
+                <p className='font-bold text-lg mt-1 mb-1'>Rs.{item.price}</p>
+                <button className='w-full bg-purple-700 text-center text-white rounded-lg mb-2 mt-1'
+                onClick={()=> deleteProduct(item._id)}
+                >
+                  Delete
+                </button>
+
+              
+              </div>
+            </div>
+          ))}
+       
 
      </div>
       

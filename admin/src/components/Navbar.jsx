@@ -14,7 +14,7 @@ const Navbar = ({setToken}) => {
         <FiSearch className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500" size={20} />
       </span>
       
-      <button className='bg-purple-500/80 text-white px-5 py-1 sm:px-7 sm:py-2 rounded-full text-xs sm:text-sm'
+      <button className='bg-purple-700 text-white px-5 py-1 sm:px-7 sm:py-2 rounded-full text-xs sm:text-sm'
         onClick={()=> setToken('')}
       >
          Logout
