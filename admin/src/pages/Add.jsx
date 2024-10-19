@@ -33,7 +33,7 @@ const Add = ({ token }) => {
       return res.data;
     },
     onSuccess: () => {
-      toast.success("Product added successfully!");
+      toast.success("Product added successfully");
 
       setName("");
       setDescription("");
@@ -48,9 +48,12 @@ const Add = ({ token }) => {
       setImage4(false);
     },
     onError: (error) => {
-      console.error("Error adding product", error);
-    },
-  });
+      console.error("Error adding product", error)
+      toast.error(error.message)
+    }
+  })
+
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -71,6 +74,8 @@ const Add = ({ token }) => {
     //trigger the mutation
     mutation.mutate(formData);
   };
+
+  
 
   return (
     <form
@@ -303,7 +308,7 @@ const Add = ({ token }) => {
       </div>
 
       <button type="submit" className="w-28 py-3 mt-4 bg-black text-white">
-        ADD
+         {mutation.isPending ? "sending..." : "ADD"}
       </button>
     </form>
   );
