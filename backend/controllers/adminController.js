@@ -90,7 +90,7 @@ const removeProduct= async(req,res)=>{
    try {
     await productModel.findByIdAndDelete(req.body.id)
     res.json({
-      success:true,message:"product removed!"
+      success:true,message:"product removed succefuly!"
     })
     
    } catch (error) {
@@ -100,5 +100,21 @@ const removeProduct= async(req,res)=>{
 
 }
 
+const listProduct=async(req,res)=>{
+ 
+  try {
+     const products= await productModel.find({})
+     res.json({
+         success:true,
+         products
+     })
+     
+  } catch (error) {
+     console.log(error);
+     res.json({success:false,message: error.message})
+     
+  }
+}
 
-export { adminlogin,addProduct,removeProduct}
+
+export { adminlogin,addProduct,removeProduct,listProduct}

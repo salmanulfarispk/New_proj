@@ -4,6 +4,8 @@ import { NavLink } from "react-router-dom"
 import { LiaListSolid } from "react-icons/lia";
 import { MdOutlinePendingActions } from "react-icons/md";
 import { TbLayoutDashboard } from "react-icons/tb";
+import { FaUsers } from "react-icons/fa6";
+
 
 
 
@@ -31,6 +33,10 @@ const Sidebar = () => {
            <NavLink to="/order-details" className="flex items-center gap-3 border border-gray-300 border-r-0 px-3 py-2 rounded">
               <MdOutlinePendingActions className="text-gray-600" size={24}/>
               <p className='hidden md:block'>Orders</p>
+           </NavLink>
+           <NavLink to="/users" className="flex items-center gap-3 border border-gray-300 border-r-0 px-3 py-2 rounded">
+              <FaUsers className="text-gray-600" size={24}/>
+              <p className='hidden md:block'>Users</p>
            </NavLink>
 
        </div>
