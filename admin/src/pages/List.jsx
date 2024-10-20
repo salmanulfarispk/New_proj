@@ -72,7 +72,7 @@ const List = ({token}) => {
     <>
      <p className='mb-2 font-semibold'>All Products List</p>
      {/**----in desktop view----- */}
-     <div className='hidden md:flex flex-col gap-2'>
+     <div className='hidden md:flex flex-col gap-2 max-h-screen overflow-y-auto'>
 
        <div className='grid grid-cols-[1fr_3fr_1fr_1fr_1fr] items-center py-1 px-2 border bg-gray-100 text-sm'>
          <b>Image</b>
@@ -100,7 +100,7 @@ const List = ({token}) => {
 
 
      {/**mobile view */}
-     <div className='flex flex-col gap-y-5 md:hidden'>
+     <div className='flex flex-col gap-y-5 max-h-screen overflow-y-auto md:hidden'>
         
           {AllProducts && AllProducts.map((item,index)=>(
             <div key={index}className='grid grid-cols-[2fr_2fr] border rounded-md'>
