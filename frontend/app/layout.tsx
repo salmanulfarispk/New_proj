@@ -7,7 +7,7 @@ import type { Metadata } from "next";
 import { Searchbar } from "@/components/Searchbar";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
+import QueryProvider from "@/provider/queryProvider";
 
 
 
@@ -42,6 +42,7 @@ export default function RootLayout({
        className={`${outfit.className} ${prata.className} antialiased`}
       >
         <div className="px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw]">
+          <QueryProvider>
         <ClientProvider>
           <ToastContainer/>
           <Navbar />
@@ -49,6 +50,7 @@ export default function RootLayout({
            {children}
            <Footer />
         </ClientProvider>
+        </QueryProvider>
         </div>
       </body>
     </html>

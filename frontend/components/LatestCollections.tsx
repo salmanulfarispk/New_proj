@@ -1,13 +1,36 @@
-import React from 'react'
-import { Products } from '@/utils/datas'
+"use client"
 import Title from './Title'
 import { ProductItem } from './ProductItem'
+import axios from "axios"
+import { backendUrl } from '@/app/page';
+import { useQuery } from '@tanstack/react-query';
+import { toast } from 'react-toastify';
+
+
 
 
 const LatestCollections = () => {
 
-    const latestproduct = Products.slice(0, 10);
-    
+
+ const {data: latestdata}=useQuery({
+  queryKey:["latestpro"],
+  queryFn: async()=>{
+      try {
+        const response= await axios.get(backendUrl+"/api/product/latest-products");
+         if(response.data.success){
+           return response.data.lastTenProduct;
+         }else{
+          toast.error(response.data.message)
+         }
+        
+      } catch (error) {
+        console.log(error);
+      }
+  },
+
+    refetchInterval: 10000,
+ })
+
 
   return (
     <div className='my-10'>
@@ -17,16 +40,20 @@ const LatestCollections = () => {
           Explore our latest collection of must-have dresses, curated to elevate your style and comfort.
           </p>
        </div>
+       {latestdata && (
+           <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 gap-y-6'>
+           {
+               latestdata.map((item:any)=> (
+                   <ProductItem _id={item._id} image={item.image[0]} name={item.name} price={item.price} key={item._id}/>
+               ))
+           }
+        </div>
+       )}
 
-         <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 gap-y-6'>
-            {
-                latestproduct.map((item,index)=> (
-                    <ProductItem id={item.id} image={item.image[0]} name={item.name} price={item.price} key={index}/>
-                ))
-            }
-         </div>
+        
     </div>
   )
 }
 
 export default LatestCollections
+

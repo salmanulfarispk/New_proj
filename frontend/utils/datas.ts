@@ -1,5 +1,4 @@
 
-
 type Product = {
     id: string;
     bestseller: boolean;
