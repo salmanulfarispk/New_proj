@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Products } from '@/utils/datas';  
+
 
 
 type Product = {
@@ -27,7 +27,7 @@ interface ProductState {
 }
 
 const initialState: ProductState = {
-  allProducts: Products,
+  allProducts: [],
   showFilter: false,
   category: [],
   subcategory: [],

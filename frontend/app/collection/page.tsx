@@ -1,15 +1,17 @@
 "use client";
 
 import Title from "@/components/Title";
-import { FormEvent, useEffect} from "react";
+import { ChangeEvent, FormEvent, useEffect} from "react";
 import { MdArrowForwardIos } from "react-icons/md";
-import { Products } from "@/utils/datas";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { setAllProducts, setCategory, setSortType, setSubCategory, toggleShowFilter } from "@/features/ProductSlice";
 import { CollectionItem } from "@/components/CollectionItem";
-
-
+import { backendUrl } from "../page";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { useQuery } from "@tanstack/react-query";
+import { usePathname } from "next/navigation";
 
 
 
@@ -20,20 +22,74 @@ const collectionPage = () => {
 
     const dispatch = useDispatch();
     const showFilter = useSelector((state: RootState) => state.products.showFilter);
-    const allProducts = useSelector((state: RootState) => state.products.allProducts);
     const category = useSelector((state: RootState) => state.products.category);
     const subcategory = useSelector((state: RootState) => state.products.subcategory);
     const sortType = useSelector((state: RootState) => state.products.sortType);
     const search = useSelector((state: RootState) => state.products.search);
-    const showSearch = useSelector((state: RootState) => state.products.showSearch);
-
-
 
    
-   
-    const toggleCategory = (e: FormEvent<HTMLInputElement>) => {
-        const value = (e.target as HTMLInputElement).value;
     
+   useEffect(() => {
+    const savedCategory = localStorage.getItem("category");
+    const savedSubCategory = localStorage.getItem("subcategory");
+    const savedSortType = localStorage.getItem("sortType");
+
+    if (savedCategory) {
+        dispatch(setCategory(savedCategory.split(',')));
+    }
+    if (savedSubCategory) {
+        dispatch(setSubCategory(savedSubCategory.split(',')));
+    }
+    if (savedSortType) {
+        dispatch(setSortType(savedSortType));
+    }
+}, [dispatch]);
+
+
+useEffect(() => {
+    localStorage.setItem("category", category.join(','));
+    localStorage.setItem("subcategory", subcategory.join(','));
+    localStorage.setItem("sortType", sortType);
+}, [category, subcategory, sortType]);
+  
+
+  useEffect(() => {
+    if (category.length || subcategory.length || sortType) {
+      localStorage.setItem("category", category.join(','));
+      localStorage.setItem("subcategory", subcategory.join(','));
+      localStorage.setItem("sortType", sortType);
+    }
+  }, [category, subcategory, sortType]);
+    
+
+    
+
+    const query = {
+        search,
+        category: Array.isArray(category) ? category.join(',') : category,
+        subCategory: Array.isArray(subcategory) ? subcategory.join(',') : subcategory,
+        sortType,
+    };
+
+  
+    const { data: Allproducts,isLoading}=useQuery({
+        queryKey:["allproducts",query],
+        queryFn: async()=>{
+            const res = await axios.get(`${backendUrl}/api/product/all-collections`, { params: query });
+          if(res.data.success){
+            return res.data.products
+          }else{
+            toast.error(res.data.message)
+          }
+        },
+        refetchOnWindowFocus: true, 
+        refetchOnReconnect: true, 
+    })
+
+    
+    
+    const handleCategory = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
         const newCategories = category.includes(value)
             ? category.filter(item => item !== value)
             : [...category, value];
@@ -41,9 +97,8 @@ const collectionPage = () => {
         dispatch(setCategory(newCategories));
     };
     
-    const toggleSubCategory = (e: FormEvent<HTMLInputElement>) => {
-        const value = (e.target as HTMLInputElement).value;
-    
+    const handleSubCategory = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
         const newSubCategories = subcategory.includes(value)
             ? subcategory.filter(item => item !== value)
             : [...subcategory, value];
@@ -51,54 +106,14 @@ const collectionPage = () => {
         dispatch(setSubCategory(newSubCategories));
     };
     
-   
-
-    const applyFilter=()=>{
-        let productsCopy= Products.slice(); //creates a copy
-
-        if (showSearch && search){
-            productsCopy= productsCopy.filter(item => item.name.toLowerCase().includes(search.toLowerCase()))   
-        }
-        if(category.length > 0){
-            productsCopy= productsCopy.filter(item => category.includes(item.category))
-        }
-
-        if(subcategory.length > 0){
-            productsCopy= productsCopy.filter(item => subcategory.includes(item.SubCategory))
-
-        }
-
-        dispatch(setAllProducts(productsCopy))
-    };
 
     
-    const sortProduct =()=>{
+   
 
-        let fpcopy= allProducts.slice();
-
-        switch(sortType){
-            case "low-high":
-                dispatch(setAllProducts(fpcopy.sort((a,b)=> (a.price - b.price))))
-                break;
-            case "high-low":
-                dispatch(setAllProducts(fpcopy.sort((a,b)=> b.price - a.price)))
-                break;
-
-            default:
-             applyFilter();
-             break;
-        }
+    if (isLoading) {
+        return <div>Loading...</div>; 
     }
 
-
-   useEffect(()=>{
-    applyFilter()
-   },[category,subcategory,search,showSearch])
-
-     
-   useEffect(()=>{
-      sortProduct();
-   },[sortType])
 
     return (
         <div className="flex flex-col sm:flex-row gap-1 sm:gap-10 pt-10 border-t">
@@ -114,13 +129,13 @@ const collectionPage = () => {
                     <p className="mb-3 text-sm font-medium">CATEGORIES</p>
                     <div className="flex flex-col gap-2 text-sm font-light text-gray-700">
                       <p className="flex gap-2">
-                         <input type="checkbox" value={'Men'} className="w-3" onChange={toggleCategory}/> Men
+                         <input type="checkbox" value={'Men'} checked={category.includes('Men')}  className="w-3" onChange={handleCategory}/> Men
                       </p>
                       <p className="flex gap-2">
-                         <input type="checkbox" value={'Women'} className="w-3" onChange={toggleCategory}/> Women
+                         <input type="checkbox" value={'Women'} checked={category.includes('Women')}  className="w-3" onChange={handleCategory}/> Women
                       </p>
                       <p className="flex gap-2">
-                         <input type="checkbox" value={'Kids'} className="w-3" onChange={toggleCategory}/> Kids
+                         <input type="checkbox" value={'Kids'} className="w-3" checked={category.includes('Kids')}  onChange={handleCategory}/> Kids
                       </p>
                     </div>
                 </div>
@@ -131,13 +146,13 @@ const collectionPage = () => {
                     <p className="mb-3 text-sm font-medium">TYPE</p>
                     <div className="flex flex-col gap-2 text-sm font-light text-gray-700">
                       <p className="flex gap-2">
-                         <input type="checkbox" value={'Topwear'} className="w-3" onChange={toggleSubCategory}/> Topwear
+                         <input type="checkbox" value={'Topwear'} checked={subcategory.includes('Topwear')}  className="w-3" onChange={handleSubCategory}/> Topwear
                       </p>
                       <p className="flex gap-2">
-                         <input type="checkbox" value={'Bottomwear'} className="w-3"  onChange={toggleSubCategory}/> Bottomwear
+                         <input type="checkbox" value={'Bottomwear'} checked={subcategory.includes('Bottomwear')}  className="w-3" onChange={handleSubCategory}/> Bottomwear
                       </p>
                       <p className="flex gap-2">
-                         <input type="checkbox" value={'Winterwear'} className="w-3"  onChange={toggleSubCategory}/> Winterwear
+                         <input type="checkbox" value={'Winterwear'} checked={subcategory.includes('Winterwear')}  className="w-3" onChange={handleSubCategory}/> Winterwear
                       </p>
                     </div>
                 </div>
@@ -153,7 +168,7 @@ const collectionPage = () => {
                     <Title text1={'ALL'} text2={"COLLECTIONS"}/>
 
                     {/**Sort by price */}
-                    <select className="border-2 border-gray-300 text-sm px-2" onChange={(e)=> dispatch(setSortType(e.target.value))}>
+                    <select className="border-2 border-gray-300 text-sm px-2" value={sortType} onChange={(e)=> dispatch(setSortType(e.target.value))}>
                         <option value="relavent">Sort by: Relavent</option>
                         <option value="low-high">Sort by: Low to High</option>
                         <option value="high-low">Sort by: High to Low</option>
@@ -165,8 +180,8 @@ const collectionPage = () => {
 
                   <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 gap-y-6">
                      {
-                        allProducts.map((item,index)=> (
-                            <CollectionItem id={item.id} name={item.name} image={item.image[0]} price={item.price} key={index}/>
+                        Allproducts && Allproducts.map((item:any)=> (
+                            <CollectionItem id={item._id} name={item.name} image={item.image[0]} price={item.price} key={item._id}/>
                         ))
                      }
                   </div>
@@ -178,3 +193,8 @@ const collectionPage = () => {
 };
 
 export default collectionPage; 
+
+
+
+
+

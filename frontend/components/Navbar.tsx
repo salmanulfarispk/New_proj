@@ -10,7 +10,7 @@ import { IoIosArrowBack } from "react-icons/io";
 import { useDispatch, useSelector } from 'react-redux';
 import { setShowSearch } from '@/features/ProductSlice';
 import { getCartCount } from '@/features/CartSlice';
-import { PiBookmarksBold } from "react-icons/pi";
+
 
 
 
@@ -67,13 +67,7 @@ export const Navbar = () => {
               }}/>
          </span>
 
-         <span>
-         <PiBookmarksBold  className='cursor-pointer text-gray-700'size={23} 
-            onClick={()=> { 
-              router.push("/wishlist")
-              dispatch(setShowSearch(true))
-              }}/>
-         </span>
+       
          <div className='group relative'>
             <Link href='/login'>
            <FaRegUser className='cursor-pointer text-gray-700' size={20}/>

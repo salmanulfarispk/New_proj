@@ -1,6 +1,5 @@
 "use client"
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
 import React from 'react'
 
 type productItem={
@@ -13,7 +12,6 @@ type productItem={
 export const CollectionItem = ({id,image,name,price}:productItem) => {
     const currency="₹";
 
-    const pathname=usePathname();
 
   
   return (

@@ -1,12 +1,35 @@
-import React from 'react'
-import { Products } from '@/utils/datas'
+"use client"
 import Title from './Title';
 import { ProductItem } from './ProductItem';
+import { useQuery } from '@tanstack/react-query';
+import axios from 'axios';
+import { backendUrl } from '@/app/page';
+import { toast } from 'react-toastify';
 
 
 export const BestSeller = () => {
 
-    const bestSeller = Products.slice(0, 5);
+  
+ const {data: bestSeller}=useQuery({
+  queryKey:["bestsell"],
+  queryFn: async()=>{
+      try {
+        const response= await axios.get(backendUrl+"/api/product/best-sellers");
+         if(response.data.success){
+           return response.data.bestSells;
+         }else{
+          toast.error(response.data.message)
+         }
+        
+      } catch (error) {
+        console.log(error);
+      }
+  },
+
+    refetchInterval: 10000,
+ })
+
+
 
   return (
     <div className='my-10'>
@@ -20,8 +43,8 @@ export const BestSeller = () => {
 
        <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 gap-y-6'>
          {
-            bestSeller.map((item, index)=> (
-                <ProductItem id={item.id} image={item.image[0]} name={item.name} price={item.price} key={index}/>
+            bestSeller && bestSeller.map((item:any)=> (
+                <ProductItem _id={item._id} image={item.image[0]} name={item.name} price={item.price} key={item._id}/>
             ))
          }
        </div>

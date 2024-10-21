@@ -97,6 +97,65 @@ const registerUser = async(req,res) => {
 
 
 
+const addtoCart= async(req,res)=>{
+
+    const {productId, price } = req.body;
+    const { id: userId } = req.user; 
+
+    try {
+
+    const user=await userModel.findById(userId)
+     if(!user){
+        return res.status(404).json({success:false, message: 'User not found' });
+     }
+    
+
+     const existingproduct= user.cartData.find(item => item.productId.toString() === productId);
+     if(existingproduct){
+        existingproduct.quantity += 1 ;
+     }else{
+        user.cartData.push({ productId, quantity: 1, price})
+     }
+
+     await user.save();
+
+    return res.status(200).json({
+      success:true,
+      message: 'Product added to cart', 
+      cartData: user.cartData 
+    })
+
+        
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: 'Internal server error' });
+    }
+}
 
 
-export { loginUser,registerUser}
+
+const getCart= async(req,res)=> {
+
+    const { id: userId } = req.user; 
+
+    try {
+
+        const user= await userModel.findById(userId).populate({
+            path: 'cartData.productId',
+            select: 'name,image,sizes,price'
+        })
+        if (!user) {
+            return res.status(404).json({success:false,message: 'User not found' });
+        }
+        
+
+        return res.status(200).json({success:true, cartData: user.cartData });
+
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: 'Internal server error' });
+    }
+}
+
+
+export { loginUser,registerUser,addtoCart,getCart}

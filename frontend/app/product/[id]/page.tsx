@@ -13,7 +13,7 @@ import { toast } from "react-toastify";
 
 
 type Product = {
-    id: string;
+    _id: string;
     bestseller: boolean;
     category: string;
     description: string;
@@ -21,7 +21,7 @@ type Product = {
     name: string;
     price: number;
     sizes: string[];
-    SubCategory: string;
+    subCategory: string;
   };
 
 const ProductPage = ({ params }: { params: { id: string } }) => {
@@ -29,7 +29,7 @@ const ProductPage = ({ params }: { params: { id: string } }) => {
   const { id: productId } = params; 
   
       
-    const dispatch = useDispatch();
+    
     const [image,setImage]=useState('')
     const [selectedImage, setSelectedImage] = useState(""); 
     const [size,SetSize]=useState('')
@@ -135,14 +135,18 @@ const ProductPage = ({ params }: { params: { id: string } }) => {
                 </div>
         </div>
 
-
-
-             {/**----description and review-----*/}
-            <DescriptionReview />
-             
-             {/**----Related products -----*/}
-
-             <RelatedProducts category={singleproduct?.category} subCategory={singleproduct?.SubCategory}/>
+       
+       
+       {singleproduct && (
+        <>
+          <DescriptionReview />
+          <RelatedProducts
+           _id={singleproduct._id}
+            category={singleproduct.category}
+            subCategory={singleproduct.subCategory}
+          />
+        </>
+       )}
 
       </div>
     );

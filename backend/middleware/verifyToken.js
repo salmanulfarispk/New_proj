@@ -28,11 +28,11 @@ export const verifyTokens = (req, res, next) => {
                     sameSite: 'Strict',
                 });
 
-                req.user = decode.id; 
+                req.user = { id: decode.id }; 
                 next(); 
             });
         } else {
-            req.user = decode.id; 
+            req.user = { id: decode.id }; 
             next(); 
         }
     });

@@ -1,58 +1,84 @@
-
-import React, { useEffect, useState } from 'react'
 import Title from './Title';
 import { ProductItem } from './ProductItem';
-import { useSelector } from "react-redux";
-import { RootState } from "@/store/store";
+import { usePathname } from 'next/navigation';
+import { CollectionItem } from './CollectionItem';
+import { useQuery } from '@tanstack/react-query';
+import axios from 'axios';
+import { backendUrl } from '@/app/page';
+import { toast } from 'react-toastify';
 
 
-interface AllCategories{
-    category: string | undefined;
-    subCategory:string | undefined;
+
+
+interface Product {
+  _id: string;
+  image: string[];
+  name: string;
+  price: number;
 }
-type Product = {
-    id: string;
-    bestseller: boolean;
-    category: string;
-    date: number;
-    description: string;
-    image: string[];
-    name: string;
-    price: number;
-    sizes: string[];
-    SubCategory: string;
-  };
 
-export const RelatedProducts = ({category,subCategory}: AllCategories) => {
+interface AllCategories {
+  _id: string | undefined;
+  category: string | undefined;
+  subCategory: string | undefined;
+}
 
-    
-   const [related,setRelated]=useState<Product[]>([])
-   const allproducts=useSelector((state:RootState) => state.products.allProducts)
+export const RelatedProducts = ({_id,category,subCategory}: AllCategories) => {
 
-   useEffect(() => {
-    if (allproducts.length > 0) {
-      let productscopy = allproducts.slice();
-  
-      
-      productscopy = productscopy.filter((item) => category?.toLowerCase() === item.category.toLowerCase());
-      productscopy = productscopy.filter((item) => subCategory?.toLowerCase() === item.SubCategory.toLowerCase());
-  
-      setRelated(productscopy.slice(0, 5));
+ 
+  const pathname=usePathname()
+
+  const { data: related=[],isLoading} = useQuery<Product[]>({
+    queryKey: ["relatedpro",category,subCategory],
+    queryFn: async () => {
+        try {
+            const res = await axios.post(backendUrl + "/api/product/related-products", {
+              category,
+              subCategory
+            });   
+
+            if (res.data.success) {
+                return res.data.relatedProducts;
+            } else {
+                toast.error(res.data.message);
+                return [];
+            }
+        } catch (error) {
+            console.error(error);
+            toast.error('An error occurred while fetching related products.');
+            return [];
+        }
     }
-  }, [category, subCategory]);
+});
+
+
+ if (isLoading) {
+  return <div className="text-center">Loading related products...</div>;
+}
+ 
 
   return (
     <div className='my-24'>
         <div className='text-center text-3xl py-2'>
             <Title text1={'RELATED'} text2={'PRODUCTS'}/>
         </div>
-
+        
+        { pathname === `/product/${_id}` &&
         <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 gap-y-6'>
-           {related.map((item,index)=> (
-              <ProductItem id={item.id} image={item.image[0]} name={item.name} price={item.price} key={index}/>
+           {related && related.map((item:any)=> (
+              <ProductItem _id={item._id} image={item.image[0]} name={item.name} price={item.price} key={item._id}/>
            ))}
         </div>
+         }
 
+          
+      { pathname === `/collection/${_id}` &&
+        <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 gap-y-6'>
+           {related && related.map((item:any)=> (
+              <CollectionItem id={item._id} image={item.image[0]} name={item.name} price={item.price} key={item._id}/>
+           ))}
+        </div>
+         }
 
 
 
