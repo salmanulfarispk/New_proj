@@ -5,7 +5,7 @@ interface AuthState {
   email: string;
   password: string;
   currentState: 'Login' | 'Sign Up';
-
+  token:string
 }
 
 const initialState: AuthState = {
@@ -13,6 +13,7 @@ const initialState: AuthState = {
   email: '',
   password: '',
   currentState: 'Sign Up',
+  token:''
 };
 
 const authSlice = createSlice({
@@ -31,6 +32,9 @@ const authSlice = createSlice({
       setCurrentState(state) {
       state.currentState = state.currentState === 'Login' ? 'Sign Up' : 'Login';
     },
+    setToken(state, action: PayloadAction<string>){
+      state.token = action.payload
+    }
     
   },
 });
@@ -40,6 +44,7 @@ export const {
   setEmail,
   setPassword,
   setCurrentState,
+  setToken
 } = authSlice.actions;
 
 export default authSlice.reducer;

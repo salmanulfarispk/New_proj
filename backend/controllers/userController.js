@@ -148,4 +148,17 @@ const getCart= async(req,res)=> {
 }
 
 
-export { loginUser,registerUser,addtoCart,getCart}
+const logout = async (req, res) => {
+    try {
+        
+        res.clearCookie('accessToken');
+        res.clearCookie('refreshToken');
+
+        return res.status(200).json({success:true,message: 'Successfully logged out' });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({success:false, message: 'Internal server error' });
+    }
+};
+
+export { loginUser,registerUser,addtoCart,getCart,logout}

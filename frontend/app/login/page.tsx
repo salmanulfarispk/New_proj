@@ -8,17 +8,21 @@ import {
   setEmail,
   setPassword,
   setCurrentState,
+  setToken,
 } from '@/features/userSlice';
 import { toast } from 'react-toastify'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { useEffect } from 'react'
+
 
 
  const loginpage = () => {
-  const [loading,setLoading]=useState(false)
+  
   const router=useRouter()
   const dispatch=useDispatch()
-  const { name, email, password, currentState } = useSelector((state: RootState) => state.user);
+  const { name, email, password, currentState,token } = useSelector((state: RootState) => state.user);
+
+
 
     const OnSubmitHandler= async(e:React.FormEvent<HTMLFormElement>)=>{
       e.preventDefault();
@@ -32,11 +36,11 @@ import { useState } from 'react'
           });
 
           if(res.data.success){
-            setLoading(true)
+             dispatch(setToken(res.data.access))
+             localStorage.setItem("token",res.data.access)
             dispatch(setName(''))
             dispatch(setEmail(''))
             dispatch(setPassword(''))
-            router.push("/")
           }else{
             toast.error(res.data.message)
           }
@@ -48,25 +52,31 @@ import { useState } from 'react'
             withCredentials: true 
           });
            
-          console.log(res.data);
-          
           if(res.data.success){
-            setLoading(true)
+             dispatch(setToken(res.data.access))
+             localStorage.setItem("token",res.data.access)
             dispatch(setEmail(''))
             dispatch(setPassword(''))
-            router.push("/")
+           
           }else{
             toast.error(res.data.message)
           }
 
         }
         
-      } catch (error) {
+      } catch (error:any) {
+        console.log(error);
+        toast.error(error.message)
         
-      } finally {
-       setLoading(false)
-      }
+      } 
     }
+
+
+    useEffect(()=>{
+      if(token){
+        router.push("/")
+      }
+    },[token])
 
   return (
     <form onSubmit={OnSubmitHandler} className='flex flex-col items-center w-[90%] sm:max-w-96 m-auto mt-14 gap-4 text-gray-800'>
@@ -104,7 +114,7 @@ import { useState } from 'react'
         </div>
 
         <button className='bg-black text-white font-light px-8 py-2 mt-4'>
-         {loading ? "Submitting..." : (currentState === "Login" ? "Sign In" : "Sign Up")}
+         {currentState === "Login" ? "Sign In" : "Sign Up" }
         </button>
     </form>
   )

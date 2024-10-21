@@ -5,11 +5,16 @@ import { FiSearch } from "react-icons/fi";
 import { FaRegUser } from "react-icons/fa6";
 import { IoCartOutline } from "react-icons/io5";
 import { HiOutlineMenuAlt3 } from "react-icons/hi";
-import {useState } from 'react';
+import {useEffect, useState } from 'react';
 import { IoIosArrowBack } from "react-icons/io";
 import { useDispatch, useSelector } from 'react-redux';
 import { setShowSearch } from '@/features/ProductSlice';
 import { getCartCount } from '@/features/CartSlice';
+import axios from 'axios';
+import { backendUrl } from '@/app/page';
+import { toast } from 'react-toastify';
+import { RootState } from '@/store/store';
+import { setToken } from '@/features/userSlice';
 
 
 
@@ -17,20 +22,51 @@ import { getCartCount } from '@/features/CartSlice';
 
 export const Navbar = () => {
 
+  const dispatch=useDispatch()
   const pathname = usePathname();
+
+  const { token } = useSelector((state: RootState) => state.user);
+
+  useEffect(()=>{
+    const storedToken = localStorage.getItem('token');
+    if (!token && storedToken) {
+      dispatch(setToken(storedToken));
+    }
+  },[])
+  
    
   const isActive = (path: string) => pathname === path;
 
   const [visible,setVisible]=useState(false)
-  
-  const dispatch=useDispatch()
-
+ 
   const router=useRouter()
 
   const cartCount = useSelector(getCartCount); 
+
  
+  
+ 
+    const logout=async()=>{
+      try {
 
-
+        const response=await axios.post(backendUrl+"/api/user/logout")
+        if(response.data.success){
+          localStorage.removeItem("access");
+          localStorage.removeItem("refresh");
+        }else{
+          toast.error(response.data.message)
+        }
+        
+      } catch (error) {
+        console.log(error);
+        
+      }
+    }
+  
+    useEffect(()=>{
+      logout();
+    },[])
+  
  
 
   return (
@@ -71,7 +107,7 @@ export const Navbar = () => {
               }}/>
          </span>
 
-{/*        
+
        {token ? (
           <div className='group relative'>
             <span>
@@ -81,7 +117,7 @@ export const Navbar = () => {
               <div className='flex flex-col py-1 w-fit px-1 bg-white text-gray-500 rounded'>
                     <p className='cursor-pointer text-sm text-black hover:bg-gray-400 hover:text-white px-2 rounded-sm'>Profile</p>
                     <p className='cursor-pointer text-sm text-black hover:bg-gray-400 hover:text-white px-2 rounded-sm'onClick={()=>router.push("/orders")}>Orders</p>
-                    <p className='cursor-pointer text-sm text-black hover:bg-gray-400 hover:text-white px-2 rounded-sm'>Logout</p>
+                    <p className='cursor-pointer text-sm text-black hover:bg-gray-400 hover:text-white px-2 rounded-sm' onClick={()=> logout()}>Logout</p>
               </div>
           </div>
        </div>
@@ -90,11 +126,9 @@ export const Navbar = () => {
         <Link href='/login'>
          <FaRegUser className='cursor-pointer text-gray-700' size={20}/>
           </Link>
-       )} */}
+       )}
 
-        <Link href='/login'>
-         <FaRegUser className='cursor-pointer text-gray-700' size={20}/>
-          </Link>
+      
          
 
           <Link href='/cart' className='relative'>
