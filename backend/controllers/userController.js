@@ -22,11 +22,7 @@ const loginUser = async(req,res) => {
         const isMatchPass= await bcrypt.compare(password,user.password)
        
         if(isMatchPass){
-            await setTokensInCookies(res,user._id);
-            res.json({
-                success:true,
-                message:"user login succesfully"
-            })
+          return  await setTokensInCookies(res,user._id);
         }else{
             res.json({
                 success: false,
@@ -80,13 +76,7 @@ const registerUser = async(req,res) => {
 
           const user= await newUser.save();
 
-          await setTokensInCookies(res,user._id)
-
-          res.json({
-            success:true,
-            message:"user registration successfully.."
-          })
-
+            return await setTokensInCookies(res,user._id)
         
     } catch (error) {
         console.log(error);

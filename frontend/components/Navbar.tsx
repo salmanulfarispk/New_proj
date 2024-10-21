@@ -5,7 +5,7 @@ import { FiSearch } from "react-icons/fi";
 import { FaRegUser } from "react-icons/fa6";
 import { IoCartOutline } from "react-icons/io5";
 import { HiOutlineMenuAlt3 } from "react-icons/hi";
-import { useState } from 'react';
+import {useState } from 'react';
 import { IoIosArrowBack } from "react-icons/io";
 import { useDispatch, useSelector } from 'react-redux';
 import { setShowSearch } from '@/features/ProductSlice';
@@ -14,10 +14,11 @@ import { getCartCount } from '@/features/CartSlice';
 
 
 
+
 export const Navbar = () => {
 
   const pathname = usePathname();
-  
+   
   const isActive = (path: string) => pathname === path;
 
   const [visible,setVisible]=useState(false)
@@ -27,6 +28,9 @@ export const Navbar = () => {
   const router=useRouter()
 
   const cartCount = useSelector(getCartCount); 
+ 
+
+
  
 
   return (
@@ -67,19 +71,31 @@ export const Navbar = () => {
               }}/>
          </span>
 
-       
-         <div className='group relative'>
-            <Link href='/login'>
-           <FaRegUser className='cursor-pointer text-gray-700' size={20}/>
-            </Link>
-            <div className='group-hover:block hidden absolute dropdown-menu right-0 pt-4 z-50 shadow-sm opacity-95'>
-                <div className='flex flex-col py-1 w-fit px-1 bg-white text-gray-500 rounded'>
-                      <p className='cursor-pointer text-sm text-black hover:bg-gray-400 hover:text-white px-2 rounded-sm'>Profile</p>
-                      <p className='cursor-pointer text-sm text-black hover:bg-gray-400 hover:text-white px-2 rounded-sm'onClick={()=>router.push("/orders")}>Orders</p>
-                      <p className='cursor-pointer text-sm text-black hover:bg-gray-400 hover:text-white px-2 rounded-sm'>Logout</p>
-                </div>
-            </div>
-         </div>
+{/*        
+       {token ? (
+          <div className='group relative'>
+            <span>
+         <FaRegUser className='cursor-pointer text-gray-700' size={20}/>
+          </span>
+          <div className='group-hover:block hidden absolute dropdown-menu right-0 pt-4 z-50 shadow-sm opacity-95'>
+              <div className='flex flex-col py-1 w-fit px-1 bg-white text-gray-500 rounded'>
+                    <p className='cursor-pointer text-sm text-black hover:bg-gray-400 hover:text-white px-2 rounded-sm'>Profile</p>
+                    <p className='cursor-pointer text-sm text-black hover:bg-gray-400 hover:text-white px-2 rounded-sm'onClick={()=>router.push("/orders")}>Orders</p>
+                    <p className='cursor-pointer text-sm text-black hover:bg-gray-400 hover:text-white px-2 rounded-sm'>Logout</p>
+              </div>
+          </div>
+       </div>
+       ): (
+
+        <Link href='/login'>
+         <FaRegUser className='cursor-pointer text-gray-700' size={20}/>
+          </Link>
+       )} */}
+
+        <Link href='/login'>
+         <FaRegUser className='cursor-pointer text-gray-700' size={20}/>
+          </Link>
+         
 
           <Link href='/cart' className='relative'>
              <span>
