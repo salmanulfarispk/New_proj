@@ -2,9 +2,10 @@ import validator from "validator";
 import bcrypt from "bcrypt";
 import userModel from "../models/userModel.js"
 import { setTokensInCookies } from "../utils/generateTokens.js";
+import jwt from "jsonwebtoken"
 
 
-
+const isProduction = process.env.NODE_ENV === "production";
 
 
 const loginUser = async(req,res) => {
@@ -22,7 +23,11 @@ const loginUser = async(req,res) => {
         const isMatchPass= await bcrypt.compare(password,user.password)
        
         if(isMatchPass){
-          return  await setTokensInCookies(res,user._id);
+          await setTokensInCookies(res,user._id);
+          
+          return res.json({
+            success:true,
+        })
         }else{
             res.json({
                 success: false,
@@ -76,9 +81,38 @@ const registerUser = async(req,res) => {
 
           const user= await newUser.save();
 
-            return await setTokensInCookies(res,user._id)
+             await setTokensInCookies(res,user._id)
+
+             return res.json({
+                success:true,
+            })
         
     } catch (error) {
+        console.log(error);
+        res.json({success:false,message:error.message})
+        
+    }
+}
+
+
+const    IsUserAvailable=async(req,res)=>{
+    try {
+        const { accessToken} = req.cookies;
+
+        if (!accessToken) {
+            return res.status(401).json({ success: false, message: 'User is not authenticated' });
+        }
+       
+        jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
+            if (err) {
+                return res.status(403).json({ success: false, message: 'Access token is invalid' });
+            }
+            
+            return res.status(200).json({ success: true, user: user.id });
+        });
+        
+    } catch (error) {
+
         console.log(error);
         res.json({success:false,message:error.message})
         
@@ -151,8 +185,13 @@ const getCart= async(req,res)=> {
 const logout = async (req, res) => {
     try {
         
-        res.clearCookie('accessToken');
-        res.clearCookie('refreshToken');
+        res.cookie("accessToken", "", { 
+            maxAge: 0, 
+        });
+
+        res.cookie("refreshToken", "", { 
+            maxAge: 0, 
+        });
 
         return res.status(200).json({success:true,message: 'Successfully logged out' });
     } catch (error) {
@@ -161,4 +200,4 @@ const logout = async (req, res) => {
     }
 };
 
-export { loginUser,registerUser,addtoCart,getCart,logout}
+export { loginUser,registerUser,addtoCart,getCart,logout,IsUserAvailable}

@@ -21,20 +21,15 @@ export const setTokensInCookies = (res, id) => {
     res.cookie("accessToken", accessTokenValue, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
-        maxAge: 60 * 60 * 1000,
-        meSite: isProduction ? 'None' : 'Lax',
+        maxAge: 1 * 60 * 60 * 1000, 
+        sameSite: isProduction ? 'None' : 'Lax',
     });
 
     res.cookie("refreshToken", refreshTokenValue, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         maxAge: 2 * 24 * 60 * 60 * 1000,
-        meSite: isProduction ? 'None' : 'Lax',
+        sameSite: isProduction ? 'None' : 'Lax',
     });
 
-    res.json({
-        success:true,
-        access: accessTokenValue,
-        refresh: refreshTokenValue
-    })
 };

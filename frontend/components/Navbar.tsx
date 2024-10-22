@@ -14,25 +14,23 @@ import axios from 'axios';
 import { backendUrl } from '@/app/page';
 import { toast } from 'react-toastify';
 import { RootState } from '@/store/store';
-import { setToken } from '@/features/userSlice';
-
+import { checkToken, setToken } from '@/features/userSlice';
+import { AppDispatch } from "@/store/store"
 
 
 
 
 export const Navbar = () => {
 
-  const dispatch=useDispatch()
+  const dispatch: AppDispatch = useDispatch();
   const pathname = usePathname();
 
   const { token } = useSelector((state: RootState) => state.user);
 
-  useEffect(()=>{
-    const storedToken = localStorage.getItem('token');
-    if (!token && storedToken) {
-      dispatch(setToken(storedToken));
-    }
-  },[])
+  
+  useEffect(() => {
+    dispatch(checkToken());
+  }, [dispatch]);
   
    
   const isActive = (path: string) => pathname === path;
@@ -44,30 +42,26 @@ export const Navbar = () => {
   const cartCount = useSelector(getCartCount); 
 
  
-  
- 
-    const logout=async()=>{
-      try {
-
-        const response=await axios.post(backendUrl+"/api/user/logout")
-        if(response.data.success){
-          localStorage.removeItem("access");
-          localStorage.removeItem("refresh");
-        }else{
-          toast.error(response.data.message)
-        }
+  const Logout=async()=>{
+     try {
+      const res=await axios.post(`${backendUrl}/api/user/logout`,{
+        withCredentials: true
+      })
+       console.log(res);
+       
+      if(res.data.success){
+       router.push("/login")
         
-      } catch (error) {
-        console.log(error);
-        
+      }else{
+        toast.error(res.data.message)
       }
-    }
+      
+     } catch (error) {
+      console.log(error);
+      
+     }
+  }
   
-    useEffect(()=>{
-      logout();
-    },[])
-  
- 
 
   return (
     <div className='flex items-center justify-between py-6 font-medium'>
@@ -117,7 +111,7 @@ export const Navbar = () => {
               <div className='flex flex-col py-1 w-fit px-1 bg-white text-gray-500 rounded'>
                     <p className='cursor-pointer text-sm text-black hover:bg-gray-400 hover:text-white px-2 rounded-sm'>Profile</p>
                     <p className='cursor-pointer text-sm text-black hover:bg-gray-400 hover:text-white px-2 rounded-sm'onClick={()=>router.push("/orders")}>Orders</p>
-                    <p className='cursor-pointer text-sm text-black hover:bg-gray-400 hover:text-white px-2 rounded-sm' onClick={()=> logout()}>Logout</p>
+                    <p className='cursor-pointer text-sm text-black hover:bg-gray-400 hover:text-white px-2 rounded-sm' onClick={Logout}>Logout</p>
               </div>
           </div>
        </div>

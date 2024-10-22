@@ -2,13 +2,14 @@
 import axios from 'axios'
 import { backendUrl } from '../page'
 import { useDispatch, useSelector } from 'react-redux'
-import { RootState } from '@/store/store'
+import { AppDispatch, RootState } from '@/store/store'
 import {
   setName,
   setEmail,
   setPassword,
   setCurrentState,
   setToken,
+  checkToken,
 } from '@/features/userSlice';
 import { toast } from 'react-toastify'
 import { useRouter } from 'next/navigation'
@@ -19,7 +20,7 @@ import { useEffect } from 'react'
  const loginpage = () => {
   
   const router=useRouter()
-  const dispatch=useDispatch()
+  const dispatch: AppDispatch = useDispatch();
   const { name, email, password, currentState,token } = useSelector((state: RootState) => state.user);
 
 
@@ -36,8 +37,7 @@ import { useEffect } from 'react'
           });
 
           if(res.data.success){
-             dispatch(setToken(res.data.access))
-             localStorage.setItem("token",res.data.access)
+            dispatch(checkToken());
             dispatch(setName(''))
             dispatch(setEmail(''))
             dispatch(setPassword(''))
@@ -53,8 +53,7 @@ import { useEffect } from 'react'
           });
            
           if(res.data.success){
-             dispatch(setToken(res.data.access))
-             localStorage.setItem("token",res.data.access)
+            dispatch(checkToken());
             dispatch(setEmail(''))
             dispatch(setPassword(''))
            
@@ -70,13 +69,12 @@ import { useEffect } from 'react'
         
       } 
     }
-
-
+ 
     useEffect(()=>{
-      if(token){
-        router.push("/")
-      }
-    },[token])
+   if(token){
+     router.push("/")
+   }
+    },[token,router])
 
   return (
     <form onSubmit={OnSubmitHandler} className='flex flex-col items-center w-[90%] sm:max-w-96 m-auto mt-14 gap-4 text-gray-800'>
