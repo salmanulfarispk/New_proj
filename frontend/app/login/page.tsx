@@ -9,7 +9,6 @@ import {
   setPassword,
   setCurrentState,
   setToken,
-  checkToken,
 } from '@/features/userSlice';
 import { toast } from 'react-toastify'
 import { useRouter } from 'next/navigation'
@@ -37,7 +36,8 @@ import { useEffect } from 'react'
           });
 
           if(res.data.success){
-            dispatch(checkToken());
+            dispatch(setToken(res.data.token))
+            localStorage.setItem('token',res.data.token)
             dispatch(setName(''))
             dispatch(setEmail(''))
             dispatch(setPassword(''))
@@ -53,7 +53,8 @@ import { useEffect } from 'react'
           });
            
           if(res.data.success){
-            dispatch(checkToken());
+            dispatch(setToken(res.data.token))
+            localStorage.setItem('token',res.data.token)
             dispatch(setEmail(''))
             dispatch(setPassword(''))
            

@@ -10,12 +10,9 @@ import { IoIosArrowBack } from "react-icons/io";
 import { useDispatch, useSelector } from 'react-redux';
 import { setShowSearch } from '@/features/ProductSlice';
 import { getCartCount } from '@/features/CartSlice';
-import axios from 'axios';
-import { backendUrl } from '@/app/page';
-import { toast } from 'react-toastify';
 import { RootState } from '@/store/store';
-import { checkToken, setToken } from '@/features/userSlice';
 import { AppDispatch } from "@/store/store"
+import { setToken } from '@/features/userSlice';
 
 
 
@@ -29,9 +26,12 @@ export const Navbar = () => {
 
   
   useEffect(() => {
-    dispatch(checkToken());
-  }, [dispatch]);
-  
+    const storedToken = localStorage.getItem('token');
+    if (!token && storedToken) {
+      dispatch(setToken(storedToken));
+    }
+  }, [dispatch, token]); 
+
    
   const isActive = (path: string) => pathname === path;
 
@@ -42,26 +42,15 @@ export const Navbar = () => {
   const cartCount = useSelector(getCartCount); 
 
  
-  const Logout=async()=>{
-     try {
-      const res=await axios.post(`${backendUrl}/api/user/logout`,{
-        withCredentials: true
-      })
-       console.log(res);
-       
-      if(res.data.success){
-       router.push("/login")
-        
-      }else{
-        toast.error(res.data.message)
-      }
-      
-     } catch (error) {
-      console.log(error);
-      
-     }
-  }
+  const Logout = () => {
+        router.push("/login");
+        localStorage.clear();
+        dispatch(setToken('')); 
+        // setCartItems({}); 
+
+    };
   
+
 
   return (
     <div className='flex items-center justify-between py-6 font-medium'>
@@ -102,11 +91,11 @@ export const Navbar = () => {
          </span>
 
 
-       {token ? (
           <div className='group relative'>
-            <span>
-         <FaRegUser className='cursor-pointer text-gray-700' size={20}/>
-          </span>
+            <span onClick={()=> token ? null : router.push("/login")}>
+            <FaRegUser className='cursor-pointer text-gray-700' size={20}/>
+          </span> 
+          {token && 
           <div className='group-hover:block hidden absolute dropdown-menu right-0 pt-4 z-50 shadow-sm opacity-95'>
               <div className='flex flex-col py-1 w-fit px-1 bg-white text-gray-500 rounded'>
                     <p className='cursor-pointer text-sm text-black hover:bg-gray-400 hover:text-white px-2 rounded-sm'>Profile</p>
@@ -114,16 +103,9 @@ export const Navbar = () => {
                     <p className='cursor-pointer text-sm text-black hover:bg-gray-400 hover:text-white px-2 rounded-sm' onClick={Logout}>Logout</p>
               </div>
           </div>
+           }
        </div>
-       ): (
-
-        <Link href='/login'>
-         <FaRegUser className='cursor-pointer text-gray-700' size={20}/>
-          </Link>
-       )}
-
-      
-         
+       
 
           <Link href='/cart' className='relative'>
              <span>

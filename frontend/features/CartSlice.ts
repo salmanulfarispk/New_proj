@@ -5,7 +5,7 @@ import { Dispatch } from "redux";
 
 interface CartState {
   cartItems: {
-    [itemId: string]: {
+    [productId: string]: {
       [size: string]: number;
       [quantity: number]:number;
     };
@@ -32,7 +32,7 @@ export const { setCartItems } = CartSlice.actions;
 
 //redux takes this as a middleware 
 
-export const addToCart = (itemId: string, size: string) => (dispatch: Dispatch, getState: () => { cart: CartState }) => {
+export const addToCart = (productId: string, size: string) => (dispatch: Dispatch, getState: () => { cart: CartState }) => {
   const cartItems = getState().cart.cartItems; ///getting the current cart items
   const cartData = structuredClone(cartItems);  // Create a copy of the cart items
 
@@ -40,14 +40,14 @@ export const addToCart = (itemId: string, size: string) => (dispatch: Dispatch, 
         toast.error('Select product Size')
         return;
     }
-  if (cartData[itemId]) {
-    if (cartData[itemId][size]) {
-      cartData[itemId][size] += 1; 
+  if (cartData[productId]) {
+    if (cartData[productId][size]) {
+      cartData[productId][size] += 1; 
     } else {
-      cartData[itemId][size] = 1; 
+      cartData[productId][size] = 1; 
     }
   } else {
-    cartData[itemId] = { [size]: 1 }; 
+    cartData[productId] = { [size]: 1 }; 
   }
 
   dispatch(setCartItems(cartData));
@@ -58,11 +58,11 @@ export const getCartCount = (state: { cart: CartState }) => {
     let totalCount = 0;
     const cartItems = state.cart.cartItems;
   
-    for (const itemId in cartItems) {
-      for (const size in cartItems[itemId]) {
+    for (const productId in cartItems) {
+      for (const size in cartItems[productId]) {
         try {
-          if (cartItems[itemId][size] > 0) {
-            totalCount += cartItems[itemId][size];
+          if (cartItems[productId][size] > 0) {
+            totalCount += cartItems[productId][size];
           }
         } catch (error) {
           console.error(error);
