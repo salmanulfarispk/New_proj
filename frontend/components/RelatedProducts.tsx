@@ -33,6 +33,7 @@ export const RelatedProducts = ({_id,category,subCategory}: AllCategories) => {
     queryFn: async () => {
         try {
             const res = await axios.post(backendUrl + "/api/product/related-products", {
+              currentProductId: _id,
               category,
               subCategory
             });   

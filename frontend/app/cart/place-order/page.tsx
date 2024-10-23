@@ -4,9 +4,35 @@ import Title from '@/components/Title'
 import { useRouter } from 'next/navigation'
 import React, { useState } from 'react'
 
+interface AllFormData{
+    firstName:string
+    lastName:string
+    email:string
+    street:string
+    city:string
+    state:string
+    zipcode:number | null
+    country:string
+    phone:number | null
+}
+
 const PlaceOrderpage = () => {
 
   const [selected,setSelected]=useState('cod')
+  const [formData,setFormdata]=useState<AllFormData>({
+    firstName:"",
+    lastName:"",
+    email:"",
+    street:"",
+    city:"",
+    state:"",
+    zipcode:null,
+    country:"",
+    phone:null
+  })
+
+
+
     const router=useRouter()
 
   return (
@@ -27,11 +53,11 @@ const PlaceOrderpage = () => {
             <div className='grid grid-cols-2 gap-3'>
              <input type="text" placeholder='City' className='border border-gray-300 rounded py-1.5 px-3.5 w-full'/>
              <input type="text" placeholder='State' className='border border-gray-300 rounded py-1.5 px-3.5 w-full'/>
-             <input type="number" placeholder='Zipcode' className='border border-gray-300 rounded py-1.5 px-3.5 w-full'/>
+             <input type="number"  value={formData.zipcode === null ? '' : formData.zipcode} placeholder='Zipcode' className='border border-gray-300 rounded py-1.5 px-3.5 w-full'/>
              <input type="text" placeholder='Country' className='border border-gray-300 rounded py-1.5 px-3.5 w-full'/>
             </div>
 
-            <input type="number" placeholder='Phone' className='border border-gray-300 rounded py-1.5 px-3.5 w-full'/>
+            <input type="number"  value={formData.zipcode === null ? '' : formData.zipcode} placeholder='Phone' className='border border-gray-300 rounded py-1.5 px-3.5 w-full'/>
              
       </div>
 

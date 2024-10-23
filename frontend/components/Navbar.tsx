@@ -16,12 +16,13 @@ import { setToken } from '@/features/userSlice';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { backendUrl } from '@/app/page';
-import { toast } from 'react-toastify';
+
 
 
 
 
 export const Navbar = () => {
+ 
 
   const dispatch: AppDispatch = useDispatch();
   const pathname = usePathname();
@@ -80,7 +81,7 @@ export const Navbar = () => {
     refetchInterval: 2000,
    })
 
-   
+  
 
   return (
     <div className='flex items-center justify-between py-6 font-medium'>

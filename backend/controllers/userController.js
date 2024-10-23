@@ -41,6 +41,9 @@ const loginUser = async (req, res) => {
   }
 };
 
+
+
+
 const registerUser = async (req, res) => {
   try {
     const { name, email, password } = req.body;
@@ -89,6 +92,8 @@ const registerUser = async (req, res) => {
 };
 
 
+
+
 const addtoCart = async (req, res) => {
   const { userId,productId, size, price } = req.body;
 
@@ -126,7 +131,8 @@ const addtoCart = async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ message: "Internal server error" });
+    return res.json({success:false,message:error.message})
+  
   }
 };
 
@@ -155,7 +161,8 @@ const getCart = async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ message: "Internal server error" });
+    return res.json({success:false,message:error.message})
+     
   }
 };
 
@@ -188,7 +195,8 @@ const updateCart = async (req, res) => {
     return res.status(200).json({success:true, message: 'Cart updated successfully', cart: user.cartData });
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ message: "Internal server error" });
+    return res.json({success:false,message:error.message})
+    
   }
 
 };
@@ -217,7 +225,8 @@ const cartCount = async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ message: "Internal server error" });
+    return res.json({success:false,message:error.message})
+   
   }
 };
 
@@ -253,7 +262,8 @@ const deleteCart=async(req,res)=>{
     
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ message: "Internal server error" });
+    return res.json({success:false,message:error.message})
+    
   }
 };
 
@@ -294,7 +304,7 @@ const gettotalAmount=async(req,res)=>{
     
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ message: "Internal server error" });
+    return res.json({success:false,message:error.message})
   }
 }
 

@@ -85,10 +85,8 @@ const bestsellers=async(req,res)=>{
          })
         
     } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: "An error occurred while fetching bestsellers."
-        });
+        return res.json({success:false,message:error.message})
+       
     }
 }
 
@@ -132,10 +130,8 @@ const filterProducts = async (req, res) => {
 
     } catch (error) {
         console.error(error);
-        res.status(500).json({
-            success: false,
-            message: "An error occurred while fetching products."
-        });
+        return res.json({success:false,message:error.message})
+         
     }
 }
 
@@ -143,7 +139,7 @@ const filterProducts = async (req, res) => {
 
 
 const getRelatedProducts = async (req, res) => {
-    const { category, subCategory } = req.body; 
+    const { category, subCategory, currentProductId } = req.body; 
     
     
     if (!category || !subCategory) {
@@ -154,7 +150,8 @@ const getRelatedProducts = async (req, res) => {
         
         const relatedProducts = await productModel.find({ 
             category: category,
-            subCategory: subCategory
+            subCategory: subCategory,
+            _id: { $ne: currentProductId } 
         })
          .sort({ createdAt: -1 })
         .limit(5);
@@ -166,7 +163,7 @@ const getRelatedProducts = async (req, res) => {
         return res.status(200).json({success:true,relatedProducts});
 
     } catch (error) {
-        return res.status(500).json({ message: 'Internal Server Error.' });
+        return res.json({success:false,message:error.message})
     }
 };
 

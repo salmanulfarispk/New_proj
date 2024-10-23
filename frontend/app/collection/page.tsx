@@ -11,7 +11,7 @@ import { backendUrl } from "../page";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useQuery } from "@tanstack/react-query";
-import { usePathname } from "next/navigation";
+
 
 
 

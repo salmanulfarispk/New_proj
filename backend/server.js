@@ -7,6 +7,7 @@ import userRouter from "./routes/userRoute.js";
 import adminRouter from "./routes/adminRoute.js"
 import cookieParser from "cookie-parser";
 import productRouter from "./routes/productRoute.js";
+import orderRouter from "./routes/orderRoute.js";
 
 
 
@@ -25,6 +26,8 @@ app.use(cookieParser());
 app.use("/api/user",userRouter)
 app.use("/api/admin",adminRouter)
 app.use("/api/product",productRouter)
+app.use("/api/order",orderRouter)
+
 
 
 
