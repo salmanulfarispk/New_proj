@@ -117,9 +117,6 @@ const addtoCart = async (req, res) => {
       (item) => item.productId.toString() === productId && item.size === size
     );
 
-  
-    
-
     if (existingProduct) {
        existingProduct.quantity += 1;
     } else {

@@ -3,16 +3,15 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 
 type Product = {
-  id: string;
+  _id: string;
   bestseller: boolean;
   category: string;
-  date: number;
   description: string;
   image: string[];
   name: string;
   price: number;
   sizes: string[];
-  SubCategory: string;
+  subCategory: string;
 };
 
 

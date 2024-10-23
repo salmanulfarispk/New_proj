@@ -181,11 +181,20 @@ import { useSelector } from 'react-redux';
        <div className='flex justify-end my-20 '>
         <div className='w-full sm:w-[450px]'>
          <CartTotal />
-         <div className='w-full text-end'>
-            <button className='bg-black text-white text-sm my-8 px-8 py-3' onClick={()=>  router.push("/cart/place-order")}>
-                PROCEED TO CHECKOUT
-            </button>
-         </div>
+         {cartData&&cartData.length === 0 ? (
+             <div className='w-full text-end'>
+             <button className='bg-black cursor-none text-white text-sm my-8 px-8 py-3'>
+                 PROCEED TO CHECKOUT
+             </button>
+          </div>
+         ):(
+          <div className='w-full text-end'>
+          <button className='bg-black  text-white text-sm my-8 px-8 py-3' onClick={()=>  router.push("/cart/place-order")}>
+              PROCEED TO CHECKOUT
+          </button>
+       </div>
+         )}
+        
         </div>          
        </div>
 

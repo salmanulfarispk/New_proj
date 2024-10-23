@@ -1,8 +1,12 @@
 "use client"
+import { backendUrl } from '@/app/page'
 import { CartTotal } from '@/components/CartTotal'
 import Title from '@/components/Title'
+import { useQueryClient } from '@tanstack/react-query'
+import axios from 'axios'
 import { useRouter } from 'next/navigation'
-import React, { FormEvent, FormEventHandler, useState } from 'react'
+import React, { useState } from 'react'
+import { toast } from 'react-toastify'
 
 interface AllFormData{
     firstName:string
@@ -19,6 +23,8 @@ interface AllFormData{
 const PlaceOrderpage = () => {
   
   const router=useRouter()
+  const queryClient = useQueryClient();
+
 
   const [selected,setSelected]=useState('cod')
   const [formData,setFormdata]=useState<AllFormData>({
@@ -41,8 +47,54 @@ const PlaceOrderpage = () => {
 };
 
 
+  const handleSubmitHandler=async(event:React.FormEvent<HTMLFormElement>)=>{
+
+      event.preventDefault()
+  
+      try {
+        const token=localStorage.getItem('token')
+        let orderData={
+          address: formData
+        }
+        if (!token) {
+          toast.error("Please login to place an order");
+          return;
+        }
+
+        switch(selected){
+          
+          case 'cod':
+           const response=await axios.post(backendUrl+"/api/order/place-order",orderData,{
+             headers:{ token }
+           });
+             
+           if(response.data.success){
+            queryClient.invalidateQueries({ queryKey: ["cart"] });
+            router.push("/orders")
+           }else{
+            toast.error(response.data.message)
+           }
+          break;
+
+
+          default:
+            break;
+        }
+       
+
+      
+        
+      } catch (error) {
+        console.log(error);
+        
+      }
+  }
+
+
   return (
-    <form className='flex flex-col sm:flex-row justify-between  gap-4 pt-5 sm:pt-14 min-h-[80vh] border-t'>
+    <form className='flex flex-col sm:flex-row justify-between  gap-4 pt-5 sm:pt-14 min-h-[80vh] border-t'
+      onSubmit={handleSubmitHandler}
+    >
       
       <div className='flex flex-col gap-4 w-full sm:max-w-[480px]'>
           <div className='text-xl sm:text-2xl my-3'>
@@ -72,7 +124,7 @@ const PlaceOrderpage = () => {
 
         <div className='mt-8'>
           <div className='mt-8 min-w-80'>
-            <CartTotal/>
+            <CartTotal />
           </div>
 
           <div className='mt-12'>

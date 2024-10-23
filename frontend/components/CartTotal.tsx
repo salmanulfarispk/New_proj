@@ -31,7 +31,6 @@ export const CartTotal = () => {
         
         if(res.data.success){
           queryClient.invalidateQueries({ queryKey: ["cart"] });
-
           return res.data
         }
       },
