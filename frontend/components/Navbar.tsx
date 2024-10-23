@@ -9,10 +9,14 @@ import {useEffect, useState } from 'react';
 import { IoIosArrowBack } from "react-icons/io";
 import { useDispatch, useSelector } from 'react-redux';
 import { setShowSearch } from '@/features/ProductSlice';
-import { getCartCount } from '@/features/CartSlice';
+import { getCartCount, setCartItems } from '@/features/CartSlice';
 import { RootState } from '@/store/store';
 import { AppDispatch } from "@/store/store"
 import { setToken } from '@/features/userSlice';
+import { useQuery } from '@tanstack/react-query';
+import axios from 'axios';
+import { backendUrl } from '@/app/page';
+import { toast } from 'react-toastify';
 
 
 
@@ -24,7 +28,6 @@ export const Navbar = () => {
 
   const { token } = useSelector((state: RootState) => state.user);
 
-  
   useEffect(() => {
     const storedToken = localStorage.getItem('token');
     if (!token && storedToken) {
@@ -38,19 +41,46 @@ export const Navbar = () => {
   const [visible,setVisible]=useState(false)
  
   const router=useRouter()
-
-  const cartCount = useSelector(getCartCount); 
-
  
   const Logout = () => {
         router.push("/login");
         localStorage.clear();
         dispatch(setToken('')); 
-        // setCartItems({}); 
+        dispatch(setCartItems({})) 
 
     };
   
+   const {data: totalcount}=useQuery({
+    queryKey:["totalcount"],
+    queryFn:async()=>{
+      try {   
+         const Token=localStorage.getItem("token")
+        const response = await axios.post(
+          backendUrl + "/api/user/cartcount",
+          {}, 
+          {
+            headers: {
+              Token
+            },
+          }
+        );    
+        
+        if(Token && response.data.success){
+          return response.data.productCount;
+        }else{
+          return 0; 
+        }
+        
+      } catch (error:any) {
+        console.log(error.message);
+        return 0;
+        
+      }
+    },
+    refetchInterval: 2000,
+   })
 
+   
 
   return (
     <div className='flex items-center justify-between py-6 font-medium'>
@@ -110,7 +140,7 @@ export const Navbar = () => {
           <Link href='/cart' className='relative'>
              <span>
              <IoCartOutline className='cursor-pointer text-gray-700' size={24}/>
-              <p className='absolute right-[-1px] bottom-[1px] w-3 h-3 text-center leading-3 bg-black text-white aspect-square rounded-full text-[7px]'>{cartCount}</p>
+              <p className='absolute right-[-1px] bottom-[1px] w-3 h-3 text-center leading-3 bg-black text-white aspect-square rounded-full text-[7px]'>{totalcount}</p>
              </span>
           </Link>
 

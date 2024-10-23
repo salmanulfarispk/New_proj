@@ -17,10 +17,10 @@ const userSchema= new mongoose.Schema({
     },
     cartData:[
         {
-            productId: { type: mongoose.Schema.Types.ObjectId, ref:"product",required: true},
-            quantity: { type: Number, required: true, default: 1 },
-            price: { type: Number, required: true },
-            size: {type: String, required: true}, 
+            productId: { type: mongoose.Schema.Types.ObjectId, ref:"product",},
+            quantity: { type: Number, default: 1 },
+            price: { type: Number},
+            size: {type: String}, 
         }
     ],
 

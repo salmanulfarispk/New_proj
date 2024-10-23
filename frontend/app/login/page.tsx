@@ -31,9 +31,7 @@ import { useEffect } from 'react'
 
         if(currentState === 'Sign Up'){
 
-          const res=await axios.post(backendUrl+'/api/user/register',{ name,email,password},{
-            withCredentials: true 
-          });
+          const res=await axios.post(backendUrl+'/api/user/register',{ name,email,password});
 
           if(res.data.success){
             dispatch(setToken(res.data.token))
@@ -48,9 +46,7 @@ import { useEffect } from 'react'
         
         }else{
          
-          const res=await axios.post(backendUrl+'/api/user/login',{email,password},{
-            withCredentials: true 
-          });
+          const res=await axios.post(backendUrl+'/api/user/login',{email,password});
            
           if(res.data.success){
             dispatch(setToken(res.data.token))

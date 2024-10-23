@@ -3,7 +3,7 @@ import { backendUrl } from "@/app/page";
 import { DescriptionReview } from "@/components/DescriptionReview";
 import { RelatedProducts } from "@/components/RelatedProducts";
 import { AppDispatch, RootState } from "@/store/store";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -31,6 +31,7 @@ const ProductPage = ({ params }: { params: { id: string } }) => {
   const [selectedImage, setSelectedImage] = useState("");
   const [size, SetSize] = useState("");
 
+  const queryClient = useQueryClient();
 
   const dispatch: AppDispatch = useDispatch();
   const {token}=useSelector((state: RootState) => state.user);
@@ -54,14 +55,15 @@ const ProductPage = ({ params }: { params: { id: string } }) => {
     },
   });
 
+
   const { mutate: addToCart, isPending } = useMutation({
     mutationFn: async ({productId,size, price,}: {productId: string; size: string; price: number;}) => {
       try {
-        const res = await axios.post(`${backendUrl}/api/user/add-to-cart`, {
-          productId, size, price,
+        const res = await axios.post(`${backendUrl}/api/user/add-to-cart`, { productId, size, price},{
+          headers:{token}
         });        
         if (res.data.success) {
-          return res.data;
+          return res.data.cartData;
         } else {
           toast.error(res.data.message);
         }
@@ -70,6 +72,15 @@ const ProductPage = ({ params }: { params: { id: string } }) => {
           error.response?.data?.message || "Error adding to cart"
         );
       }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["cart"] });
+      queryClient.invalidateQueries({ queryKey: ["totalcount"] });
+      toast.success("Item added to cart");
+     
+    },
+    onError: (error) => {
+      toast.error(error.message);
     },
   });
 

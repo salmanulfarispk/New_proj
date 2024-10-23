@@ -90,12 +90,9 @@ const registerUser = async (req, res) => {
 
 
 const addtoCart = async (req, res) => {
-  const { productId, size, price } = req.body;
-  const { id: userId } = req.user;
+  const { userId,productId, size, price } = req.body;
 
-   
-    
-
+  
   try {
     const user = await userModel.findById(userId);
     if (!user) {
@@ -104,12 +101,18 @@ const addtoCart = async (req, res) => {
         .json({ success: false, message: "User not found" });
     }
 
+    if(!size){
+      return res
+        .status(404)
+        .json({ success: false, message: "Please select a size" });
+    }
+
     const existingProduct = user.cartData.find(
-      (item) => item.productId.toString() === productId && item.size === size
+      (item) => item.productId === productId && item.size === size
     );
 
     if (existingProduct) {
-      existingProduct.quantity += 1;
+       existingProduct.quantity += 1;
     } else {
       user.cartData.push({ productId, quantity: 1, price, size });
     }
@@ -130,15 +133,21 @@ const addtoCart = async (req, res) => {
 
 
 const getCart = async (req, res) => {
-  const { id: userId } = req.user;
+
+  const {userId}=req.body;
 
   try {
-    const user = await userModel.findById(userId);
+   
+    const user = await userModel.findById(userId).populate({
+      path: 'cartData.productId',
+      select: 'image name',
+    });
     if (!user) {
       return res
         .status(404)
         .json({ success: false, message: "User not found" });
     }
+
 
     return res.status(200).json({
       success: true,
@@ -150,33 +159,46 @@ const getCart = async (req, res) => {
   }
 };
 
+
+
 const updateCart = async (req, res) => {
-  const { productId, size, quantity } = req.body;
-  const { id: userId } = req.user;
+ 
+  const { userId, cartId, quantity } = req.body;
 
   try {
+   
     const user = await userModel.findById(userId);
+
     if (!user) {
-      return res
-        .status(404)
-        .json({ success: false, message: "User not found" });
+      return res.status(404).json({ message: 'User not found' });
     }
 
-    let cartData = await user.cartData;
+    let cartItem = user.cartData.id(cartId)
+    
 
-    cartData[productId][size] = quantity;
+    if (!cartItem) {
+      return res.status(404).json({ message: 'Cart item not found' });
+    }
 
-    await userModel.findByIdAndUpdate(userId, { cartData });
+  
+    cartItem.quantity = quantity;
+    
+    await user.save();
 
-    res.json({ success: true, message: "cart updated!" });
+    return res.status(200).json({success:true, message: 'Cart updated successfully', cart: user.cartData });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Internal server error" });
   }
+
 };
 
+
+
+
 const cartCount = async (req, res) => {
-  const { id: userId } = req.user;
+  
+  const {userId}=req.body;
 
   try {
     const user = await userModel.findById(userId);
@@ -199,6 +221,25 @@ const cartCount = async (req, res) => {
   }
 };
 
+
+const deleteCart=async(req,res)=>{
+  const {userId,cartId}=req.body;
+  try {
+     const user=await userModel.findById(userId)
+     if (!user) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
+    }
+
+    const 
+
+    
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+}
 
 export {
   loginUser,
