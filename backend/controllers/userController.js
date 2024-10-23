@@ -232,8 +232,65 @@ const deleteCart=async(req,res)=>{
         .json({ success: false, message: "User not found" });
     }
 
-    const 
+    const cartItem = user.cartData.id(cartId);
 
+    if (!cartItem) {
+      return res.status(404).json({ success: false, message: "Cart item not found" });
+    }
+
+     await userModel.findByIdAndUpdate(
+      userId,
+      { $pull: { cartData: { _id: cartId } } },
+      { new: true }  
+    );
+
+    return res.status(200).json({
+      success: true,
+      message: "Cart item removed successfully",
+    });
+
+
+    
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+
+
+
+const gettotalAmount=async(req,res)=>{
+
+  const {userId}=req.body;
+  try {
+
+    const user= await userModel.findById(userId).populate('cartData.productId')
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    
+
+    let totalAmount = 0;
+    let subtotal = 0;     
+
+    user.cartData.forEach((cartItem) => {
+      const product = cartItem.productId;
+      if (product) {
+        const productAmount = product.price * cartItem.quantity; 
+        subtotal += productAmount;
+        const shippingCharge = 60 * cartItem.quantity; 
+        totalAmount += productAmount + shippingCharge; 
+      }
+    });
+
+    return res.status(200).json({
+      success: true,
+      subtotal,  
+      totalAmount,   
+    });
     
   } catch (error) {
     console.error(error);
@@ -248,4 +305,6 @@ export {
   getCart,
   updateCart,
   cartCount,
+  deleteCart,
+  gettotalAmount
 };

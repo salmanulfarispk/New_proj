@@ -1,15 +1,46 @@
 "use client"
 import React from 'react'
 import Title from './Title'
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import axios from 'axios';
+import { backendUrl } from '@/app/page';
 import { useSelector } from 'react-redux';
-import { getCartAmount } from '@/features/CartSlice';
+import { RootState } from '@/store/store';
 
+
+type Total={
+  subtotal: number;
+  totalAmount: number
+}
 
 export const CartTotal = () => {
 
-    var currency="₹";
-    const totalAmount= useSelector(getCartAmount)
+  const {token}=useSelector((state: RootState) => state.user);
+  const queryClient = useQueryClient();
 
+   
+    var currency="₹";
+   
+    const {data:total}=useQuery<Total>({
+      queryKey:["totalprice",token],
+      queryFn: async()=>{
+        const res=await axios.get(backendUrl+"/api/user/totalprice",{
+          headers:{ token }
+        })
+        
+        
+        if(res.data.success){
+          queryClient.invalidateQueries({ queryKey: ["cart"] });
+
+          return res.data
+        }
+      },
+
+        enabled: !!token,                 
+        refetchOnWindowFocus: true,  
+    })
+ 
+    
   return (
     <div className='w-full'>
       <div className='text-2xl'>
@@ -19,17 +50,17 @@ export const CartTotal = () => {
       <div className='flex flex-col gap-2 mt-2 text-sm'>
         <div className='flex justify-between'>
             <p>Subtotal</p>
-            <p>{currency}{totalAmount}.00</p>
+            <p>{currency}{total?.subtotal}.00</p>
         </div>
         <hr/>
         <div className='flex justify-between'>
                 <p>Shipping Fee</p>
-                <p>{currency}{40}.00</p>
+                <p>{currency}{60}.00</p>
         </div>
         <hr/>
         <div className='flex justify-between'>
             <b>Total</b>
-            <b>{currency} {totalAmount === 0 ? 0 : totalAmount + 40}.00</b>
+            <b>{currency} {total?.totalAmount}.00</b>
         </div>
 
       </div>

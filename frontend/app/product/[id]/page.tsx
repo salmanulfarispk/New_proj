@@ -33,7 +33,7 @@ const ProductPage = ({ params }: { params: { id: string } }) => {
 
   const queryClient = useQueryClient();
 
-  const dispatch: AppDispatch = useDispatch();
+ 
   const {token}=useSelector((state: RootState) => state.user);
 
   const { data: singleproduct } = useQuery<Product | undefined>({
@@ -56,7 +56,7 @@ const ProductPage = ({ params }: { params: { id: string } }) => {
   });
 
 
-  const { mutate: addToCart, isPending } = useMutation({
+  const { mutate: addToCart } = useMutation({
     mutationFn: async ({productId,size, price,}: {productId: string; size: string; price: number;}) => {
       try {
         const res = await axios.post(`${backendUrl}/api/user/add-to-cart`, { productId, size, price},{
@@ -165,7 +165,7 @@ const ProductPage = ({ params }: { params: { id: string } }) => {
               }
             }}
           >
-            {isPending ? "Adding" : "ADD TO CART" }
+            ADD TO CART
           </button>
         )}
 

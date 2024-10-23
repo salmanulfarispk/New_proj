@@ -76,6 +76,8 @@ import { useSelector } from 'react-redux';
             );
             if (response.data.success) {
               queryClient.invalidateQueries({ queryKey: ["cart"] });
+              queryClient.invalidateQueries({ queryKey: ["totalprice"] });
+
               
             } else {
               toast.error(response.data.message);
@@ -93,6 +95,29 @@ import { useSelector } from 'react-redux';
       const handleQuantityChange = (cartId: string, newQuantity: number) => {
         if (newQuantity < 1) return ;
         updateCartMutation.mutate({ cartId, quantity: newQuantity });
+      };
+
+
+      const handleDelete = async (cartId:string) => {
+        try {
+          const response = await axios.delete(backendUrl + '/api/user/deletCart', {
+            headers: {
+              token
+            },
+            data: { cartId },
+          });
+      
+          if (response.data.success) {
+            toast.success('Item removed from cart');
+            queryClient.invalidateQueries({ queryKey: ["cart"] });
+            queryClient.invalidateQueries({ queryKey: ["totalprice"] });
+
+            
+          }
+        } catch (error) {
+          console.log(error);
+          toast.error('Failed to delete cart item');
+        }
       };
       
 
@@ -145,6 +170,7 @@ import { useSelector } from 'react-redux';
           <RiDeleteBin6Line
             className='cursor-pointer mr-4 text-gray-500'
             size={24}
+            onClick={() => handleDelete(item._id)}
           />
         </div>
       );
@@ -154,7 +180,7 @@ import { useSelector } from 'react-redux';
 
        <div className='flex justify-end my-20 '>
         <div className='w-full sm:w-[450px]'>
-         <CartTotal/>
+         <CartTotal />
          <div className='w-full text-end'>
             <button className='bg-black text-white text-sm my-8 px-8 py-3' onClick={()=>  router.push("/cart/place-order")}>
                 PROCEED TO CHECKOUT
