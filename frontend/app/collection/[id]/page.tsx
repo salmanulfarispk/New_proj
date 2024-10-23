@@ -155,7 +155,7 @@ const CollectionItemPage = ({ params }: { params: { id: string } }) => {
         </div>
 
 
-   { token &&(
+   { token ? (
         <button
           className="bg-black text-white px-8 py-3 text-sm active:bg-gray-700"
           onClick={() => {
@@ -170,6 +170,13 @@ const CollectionItemPage = ({ params }: { params: { id: string } }) => {
         >
           ADD TO CART
         </button>
+      ): (
+        <button
+        className="bg-black text-white px-8 py-3 text-sm active:bg-gray-700"
+        onClick={()=> toast.warning("please login")}
+        >
+        ADD TO CART
+      </button>
       )}
 
         <hr className="mt-8 sm:w-4/5 " />
@@ -196,3 +203,6 @@ const CollectionItemPage = ({ params }: { params: { id: string } }) => {
 };
 
 export default CollectionItemPage;
+
+
+

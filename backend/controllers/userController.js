@@ -97,6 +97,7 @@ const registerUser = async (req, res) => {
 const addtoCart = async (req, res) => {
   const { userId,productId, size, price } = req.body;
 
+      
   
   try {
     const user = await userModel.findById(userId);
@@ -113,8 +114,11 @@ const addtoCart = async (req, res) => {
     }
 
     const existingProduct = user.cartData.find(
-      (item) => item.productId === productId && item.size === size
+      (item) => item.productId.toString() === productId && item.size === size
     );
+
+  
+    
 
     if (existingProduct) {
        existingProduct.quantity += 1;

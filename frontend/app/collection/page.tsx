@@ -1,11 +1,11 @@
 "use client";
 
 import Title from "@/components/Title";
-import { ChangeEvent, FormEvent, useEffect} from "react";
+import { useEffect} from "react";
 import { MdArrowForwardIos } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/store";
-import { setAllProducts, setCategory, setSortType, setSubCategory, toggleShowFilter } from "@/features/ProductSlice";
+import {  setCategory, setSortType, setSubCategory, toggleShowFilter } from "@/features/ProductSlice";
 import { CollectionItem } from "@/components/CollectionItem";
 import { backendUrl } from "../page";
 import axios from "axios";

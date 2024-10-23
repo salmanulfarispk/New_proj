@@ -2,7 +2,7 @@
 import { CartTotal } from '@/components/CartTotal'
 import Title from '@/components/Title'
 import { useRouter } from 'next/navigation'
-import React, { useState } from 'react'
+import React, { FormEvent, FormEventHandler, useState } from 'react'
 
 interface AllFormData{
     firstName:string
@@ -17,6 +17,8 @@ interface AllFormData{
 }
 
 const PlaceOrderpage = () => {
+  
+  const router=useRouter()
 
   const [selected,setSelected]=useState('cod')
   const [formData,setFormdata]=useState<AllFormData>({
@@ -31,33 +33,37 @@ const PlaceOrderpage = () => {
     phone:null
   })
 
+  const onChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    const parsedValue = value ? (name === 'zipcode' || name === 'phone' ? Number(value) : value) : null;
 
+    setFormdata(data => ({ ...data, [name]: parsedValue }));
+};
 
-    const router=useRouter()
 
   return (
-    <div className='flex flex-col sm:flex-row justify-between  gap-4 pt-5 sm:pt-14 min-h-[80vh] border-t'>
+    <form className='flex flex-col sm:flex-row justify-between  gap-4 pt-5 sm:pt-14 min-h-[80vh] border-t'>
       
       <div className='flex flex-col gap-4 w-full sm:max-w-[480px]'>
           <div className='text-xl sm:text-2xl my-3'>
                 <Title text1={'DELIVERY'} text2={'INFORMATION'}/>
           </div>
           <div className='flex gap-3'>
-             <input type="text" placeholder='First name' className='border border-gray-300 rounded py-1.5 px-3.5 w-full'/>
-             <input type="text" placeholder='Last name' className='border border-gray-300 rounded py-1.5 px-3.5 w-full'/>
+             <input type="text" placeholder='First name' value={formData.firstName} name='firstName' onChange={onChangeHandler} required className='border border-gray-300 rounded py-1.5 px-3.5 w-full'/>
+             <input type="text" placeholder='Last name' value={formData.lastName} name='lastName' onChange={onChangeHandler} required className='border border-gray-300 rounded py-1.5 px-3.5 w-full'/>
           </div>
 
-           <input type="email" placeholder='Email address' className='border border-gray-300 rounded py-1.5 px-3.5 w-full'/>
-            <input type="text" placeholder='Street' className='border border-gray-300 rounded py-1.5 px-3.5 w-full'/>
+           <input type="email" placeholder='Email address' value={formData.email} name='email' onChange={onChangeHandler} required className='border border-gray-300 rounded py-1.5 px-3.5 w-full'/>
+            <input type="text" placeholder='Street' value={formData.street} name='street' onChange={onChangeHandler} required className='border border-gray-300 rounded py-1.5 px-3.5 w-full'/>
         
             <div className='grid grid-cols-2 gap-3'>
-             <input type="text" placeholder='City' className='border border-gray-300 rounded py-1.5 px-3.5 w-full'/>
-             <input type="text" placeholder='State' className='border border-gray-300 rounded py-1.5 px-3.5 w-full'/>
-             <input type="number"  value={formData.zipcode === null ? '' : formData.zipcode} placeholder='Zipcode' className='border border-gray-300 rounded py-1.5 px-3.5 w-full'/>
-             <input type="text" placeholder='Country' className='border border-gray-300 rounded py-1.5 px-3.5 w-full'/>
+             <input type="text" placeholder='City' value={formData.city} name='city' onChange={onChangeHandler} required className='border border-gray-300 rounded py-1.5 px-3.5 w-full'/>
+             <input type="text" placeholder='State' value={formData.state} name='state' onChange={onChangeHandler} required className='border border-gray-300 rounded py-1.5 px-3.5 w-full'/>
+             <input type="number"  value={formData.zipcode === null ? '' : formData.zipcode} placeholder='Zipcode' name='zipcode' onChange={onChangeHandler} required className='border border-gray-300 rounded py-1.5 px-3.5 w-full'/>
+             <input type="text" placeholder='Country' value={formData.country} name='country' onChange={onChangeHandler} required className='border border-gray-300 rounded py-1.5 px-3.5 w-full'/>
             </div>
 
-            <input type="number"  value={formData.zipcode === null ? '' : formData.zipcode} placeholder='Phone' className='border border-gray-300 rounded py-1.5 px-3.5 w-full'/>
+            <input type="number"  value={formData.phone === null ? '' : formData.phone} placeholder='Phone'  name='phone' onChange={onChangeHandler} required className='border border-gray-300 rounded py-1.5 px-3.5 w-full'/>
              
       </div>
 
@@ -87,7 +93,7 @@ const PlaceOrderpage = () => {
               </div>
 
                  <div className='w-full text-center md:text-end mt-8'>
-                   <button className='w-full md:w-56 bg-black text-white px-16 py-3 text-sm' onClick={()=> router.push("/orders")}>
+                   <button type='submit' className='w-full md:w-56 bg-black text-white px-16 py-3 text-sm'>
                         PLACE ORDER
                    </button>
                  </div>
@@ -95,7 +101,7 @@ const PlaceOrderpage = () => {
           </div>
         </div>
 
-    </div>
+    </form>
   )
 }
 
