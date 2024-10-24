@@ -70,6 +70,7 @@ const PlaceOrderpage = () => {
              
            if(response.data.success){
             queryClient.invalidateQueries({ queryKey: ["cart"] });
+            queryClient.invalidateQueries({ queryKey: ["orders"] });
             router.push("/orders")
            }else{
             toast.error(response.data.message)

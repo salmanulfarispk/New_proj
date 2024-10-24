@@ -1,9 +1,59 @@
+"use client"
 import Title from "@/components/Title";
-import { Products } from "@/utils/datas";
+import { useQuery } from '@tanstack/react-query';
+import axios from "axios";
 import React from "react";
+import { toast } from "react-toastify";
+import { backendUrl } from "../page";
 
 const orderpage = () => {
   var currency = "₹";
+
+  const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
+  
+
+  const {data: Orders,refetch}=useQuery({
+    queryKey:["orders"],
+    queryFn: async()=>{
+      
+       try {
+        if (!token) {
+          toast.info("Please Login...");
+          return [];
+        }
+        const  res= await axios.post(backendUrl+"/api/order/user-orders",{},{ headers: {token}})
+        if(res.data.success){
+            let allOrdersItem:any=[];
+             res.data.orders.map((order:any)=>{
+               order.items.map((item:any)=> {
+                item['status']=order.status
+                item['payment']=order.payment
+                item['paymentMethod']=order.paymentMethod
+                item['date']=order.date
+                allOrdersItem.push(item)
+               })
+             })
+
+             return allOrdersItem.reverse()
+        }else{
+          toast.error(res.data.message)
+          return [];
+        }
+        
+       } catch (error) {
+        console.log(error);
+       }
+    },
+    enabled: !!token, 
+
+  });
+  
+
+
+  const handleTrackOrder = async () => {
+      await refetch();
+  };
+
   return (
     <div className="border-t pt-16">
       <div className="text-2xl ">
@@ -11,8 +61,8 @@ const orderpage = () => {
       </div>
 
       <div>
-        {Products &&
-          Products.slice(1, 4).map((item, index) => (
+        {Orders &&
+          Orders.map((item:any, index:any) => (
             <div
               key={index}
               className="py-4 border-t border-b text-gray-700 flex flex-col md:flex-row md:items-center md:justify-between gap-4"
@@ -30,12 +80,15 @@ const orderpage = () => {
                     {currency}
                     {item.price}
                   </p>
-                  <p>Quantity: 1</p>
-                  <p>Size: M</p>
+                  <p>Quantity: {item.quantity}</p>
+                  <p>Size: {item.size}</p>
                 </div>
 
                 <p className="mt-2">
-                  Date: <span className="text-gray-400">25, Oct, 2024</span>
+                  Date: <span className="text-gray-400">{new Date(item.date).toDateString()}</span>
+                </p>
+                <p className="mt-2">
+                   Payment: <span className="text-gray-400">{item.paymentMethod}</span>
                 </p>
               </div>
             </div>
@@ -43,9 +96,9 @@ const orderpage = () => {
             <div className="md:w-1/2 flex justify-end gap-10 md:justify-between">
                <div className="flex items-center gap-2 ">
                 <p className="min-w-2 h-2 rounded-full bg-green-500"></p>
-                <p className="text-sm md:text-base ">Ready to ship</p>
+                <p className="text-sm md:text-base ">{item.status}</p>
                </div>
-               <button className="border px-4 py-2 text-sm font-medium rounded-sm ">
+               <button className="border px-4 py-2 text-sm font-medium rounded-sm " onClick={handleTrackOrder}>
                 Track Order
                </button>
             </div>
